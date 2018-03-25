@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Cohort</string>
+
+    <string name="facebook_app_id">182483432375774</string>
+    <string name="fb_login_protocol_scheme">fb182483432375774</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up_login_page">Not a member yet? Register here</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="title_activity_main_navigation">MainNavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_logout">Logout</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_search">Search</string>
+    <string name="title_new">New</string>
+    <string name="title_petitions">Petitions</string>
+    <string name="title_news">News</string>
+    <string name="title_victories">Victories</string>
+    <string name="title_account_settings">Account Settings</string>
+    <string name="button_login_with_email">Login with email</string>
+    <string name="button_login_with_facebook">Login with facebook</string>
+    <string name="button_login_with_google">Login with google</string>
+    <string name="hint_name">Name</string>
+    <string name="save_account_settings">Save Account Settings</string>
+</resources>

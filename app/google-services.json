@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "195582591963",
+    "firebase_url": "https://cohortpetitionapp.firebaseio.com",
+    "project_id": "cohortpetitionapp",
+    "storage_bucket": "cohortpetitionapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195582591963:android:b60a89694384763d",
+        "android_client_info": {
+          "package_name": "com.trybe.project.petitionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195582591963-odmc7rojgeqp3f9t0063r8tuh0r8quu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trybe.project.petitionapp",
+            "certificate_hash": "cc862a9088c7d7876914cdc1060a6bfce5725e86"
+          }
+        },
+        {
+          "client_id": "195582591963-ij9vplvejujef0vi7r7qil4gg73gmdqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGbgdpUFe1kDmuGe6B2Tii4d_aNIMNWN8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195582591963-ij9vplvejujef0vi7r7qil4gg73gmdqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
