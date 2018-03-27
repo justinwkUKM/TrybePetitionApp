@@ -73,7 +73,7 @@ public class AccountSetupActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
 
-        profileImage = findViewById(R.id.profile_image_account_settings);
+        profileImage = findViewById(R.id.profile_image_petitions);
         etEmail = findViewById(R.id.etEmailAS);
         etName = findViewById(R.id.etNameAS);
         btSave = findViewById(R.id.btSaveAccountSettings);

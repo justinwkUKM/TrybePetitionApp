@@ -1,21 +1,18 @@
 package com.trybe.project.petitionapp;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -27,13 +24,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.trybe.project.petitionapp.fragments.AddNewPetitionFragment;
+import com.trybe.project.petitionapp.fragments.NewsFragment;
+import com.trybe.project.petitionapp.fragments.PetitionsFragment;
+import com.trybe.project.petitionapp.fragments.ProfileFragment;
+import com.trybe.project.petitionapp.fragments.VictoriesFragment;
 
 public class MainNavigationActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore firebaseFirestore;
+
+    private PetitionsFragment petitionsFragment;
+    private NewsFragment newsFragment;
+    private AddNewPetitionFragment addNewPetitionFragment;
+    private VictoriesFragment victoriesFragment;
+    private ProfileFragment profileFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -42,20 +49,23 @@ public class MainNavigationActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_petitions:
-                    mTextMessage.setText(R.string.title_home);
+                    replaceFragment(petitionsFragment);
                     return true;
                 case R.id.navigation_news:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    replaceFragment(newsFragment);
                     return true;
                 case R.id.navigation_victories:
-                    mTextMessage.setText(R.string.title_notifications);
+                   replaceFragment(victoriesFragment);
                     return true;
                 case R.id.navigation_profile:
-                    mTextMessage.setText(mAuth.getCurrentUser().getDisplayName()+"\n"+mAuth.getCurrentUser().getEmail());
+                    replaceFragment(profileFragment);
                     return true;
                 case R.id.navigation_add_new:
-                    mTextMessage.setText(R.string.title_new);
+                    startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
+                    //replaceFragment(addNewPetitionFragment);
                     return true;
+//                default:
+//                    return false;
             }
             return false;
         }
@@ -79,7 +89,14 @@ public class MainNavigationActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
-        mTextMessage = (TextView) findViewById(R.id.message);
+
+        //initializeFragments
+        petitionsFragment = new PetitionsFragment();
+        newsFragment = new NewsFragment();
+        addNewPetitionFragment = new AddNewPetitionFragment();
+        victoriesFragment = new VictoriesFragment();
+        profileFragment = new ProfileFragment();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         //BottomNavigationViewHelper.disableShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -97,10 +114,8 @@ public class MainNavigationActivity extends AppCompatActivity {
             for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
                 if (user.getProviderId().equals("facebook.com")) {
                     System.out.println("User is signed in with Facebook");
-                    mTextMessage.setText(mAuth.getCurrentUser().getDisplayName()+"\n"+mAuth.getCurrentUser().getEmail()+"\n"+"Signed in with Facebook");
                 }else{
                     System.out.println("User is signed in with "+user.getProviderId());
-                    mTextMessage.setText(mAuth.getCurrentUser().getDisplayName()+"\n"+mAuth.getCurrentUser().getEmail()+"\n"+"Signed in with "+ user.getProviderId());
                 }
             }
 
@@ -108,6 +123,13 @@ public class MainNavigationActivity extends AppCompatActivity {
 
         retrieveFromFirestore(currentUser);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        replaceFragment(petitionsFragment);
     }
 
     private void retrieveFromFirestore(FirebaseUser currentUser) {
@@ -123,9 +145,7 @@ public class MainNavigationActivity extends AppCompatActivity {
                         //Toast.makeText(MainNavigationActivity.this, "Data doesn't Exist", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(MainNavigationActivity.this, AccountSetupActivity.class));
                     }
-
                 }else{
-
                     String error = task.getException().getMessage();
                     //Toast.makeText(MainNavigationActivity.this, "firebaseFirestore error "+error, Toast.LENGTH_SHORT).show();
                 }
@@ -168,5 +188,12 @@ public class MainNavigationActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void replaceFragment(Fragment fragment){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainContainer,fragment);
+        fragmentTransaction.commit();
+
     }
 }
