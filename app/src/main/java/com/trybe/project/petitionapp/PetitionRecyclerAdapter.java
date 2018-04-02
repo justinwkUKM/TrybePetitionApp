@@ -1,6 +1,9 @@
 package com.trybe.project.petitionapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -9,25 +12,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by MyXLab on 26/3/2018.
+ * Created by MyXLab on 29/3/2018.
  */
 
 public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecyclerAdapter.ViewHolder> {
@@ -36,65 +48,184 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
     public List<PetitionModel> petitionModels;
     private Context mContext;
     private FirebaseFirestore firebaseFirestore;
-    public PetitionRecyclerAdapter(List<PetitionModel> petitionModelList, Context context){
+    private FirebaseAuth firebaseAuth;
+
+
+    public PetitionRecyclerAdapter(List<PetitionModel> petitionModelList, Activity context) {
         this.petitionModels = petitionModelList;
         this.mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.petition_list_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.petition_list_item, parent, false);
         //this.mContext = parent.getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final String stPetitionTitle, stPetitionDesc, stPetitionSupporters,image_url, user_id;
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id;
+        final String  stCurrentUserId, stPetitionPostId;
+        if (petitionModels != null) {
+            //long milliSeconds = announcementModels.get(position).getPetition_timestamp().getTime();
+            //String dateString = DateFormat.format("dd/MM/yyyy", new Date(milliSeconds)).toString();
+            //Log.w(TAG, dateString);
+            stCurrentUserId = firebaseAuth.getCurrentUser().getUid();
+            stPetitionPostId = petitionModels.get(position).PetitionPostId;
+            stPetitionTitle = petitionModels.get(position).getPetition_title();
+            stPetitionDesc = petitionModels.get(position).getPetition_desc();
+            stPetitionSupporters = petitionModels.get(position).getPetition_target_supporters();
+            image_url = petitionModels.get(position).getPetition_cover_image_url();
+            thumb_url = petitionModels.get(position).getPetition_cover_image_thumb_url();
+            holder.tvPetitionTitle.setText(stPetitionTitle);
+            holder.tvPetitionDesc.setText(stPetitionDesc);
 
-        long milliSeconds = petitionModels.get(position).getPetition_timestamp().getTime();
-        String dateString = DateFormat.format("dd/MM/yyyy", new Date(milliSeconds)).toString();
-        Log.w(TAG,dateString);
 
-        stPetitionTitle = petitionModels.get(position).getPetition_title();
-        stPetitionDesc = petitionModels.get(position).getPetition_desc();
-        stPetitionSupporters = petitionModels.get(position).getPetition_target_supporters();
-        image_url = petitionModels.get(position).getPetition_cover_image_url();
-        holder.tvPetitionTitle.setText(stPetitionTitle);
-        holder.tvPetitionDesc.setText(stPetitionDesc);
+            Random rn = new Random();
+            int range = 6 - 2 + 1;
+            final int progress = rn.nextInt(range) + 2;
+            final int totalSupporters = Integer.parseInt(stPetitionSupporters);
+            holder.supportersProgressBar.setMax(totalSupporters);
+            holder.supportersProgressBar.setProgress(totalSupporters / progress);
+            holder.tvPetitionSupporters.setText(totalSupporters / progress + " of " + stPetitionSupporters + " have signed!");
 
-        Random rn = new Random();
-        int range = 6 - 2 + 1;
-        int progress =  rn.nextInt(range) + 2;
-        int totalSupporters = Integer.parseInt(stPetitionSupporters);
-        holder.supportersProgressBar.setMax(totalSupporters);
-        holder.supportersProgressBar.setProgress(totalSupporters/progress);
-        holder.tvPetitionSupporters.setText(totalSupporters/progress+ " of "+stPetitionSupporters+" have signed!");
+            final RequestOptions placeHolderRequest = new RequestOptions();
+            placeHolderRequest.placeholder(R.drawable.com_facebook_profile_picture_blank_square);
+            Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(image_url).thumbnail(Glide.with(mContext).load(thumb_url)).into(holder.petionCoverImageView);
 
-        final RequestOptions placeHolderRequest = new RequestOptions();
-        placeHolderRequest.placeholder(R.drawable.com_facebook_profile_picture_blank_square);
-        Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(image_url).into(holder.petionCoverImageView);
+            user_id = petitionModels.get(position).getPetition_author();
+            firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        String user_name = task.getResult().getString("user_name");
+                        String user_profile_image = task.getResult().getString("user_profile_image");
+                        Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(user_profile_image).into(holder.profileImage);
 
-        user_id = petitionModels.get(position).getPetition_author();
-        firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    String user_name = task.getResult().getString("user_name");
-                    String user_profile_image = task.getResult().getString("user_profile_image");
-                    Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(user_profile_image).into(holder.profileImage);
+                    } else {
 
-                }else{
-
-                    String error = task.getException().getMessage();
-                    Log.e(TAG,error);
-                    //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
+                        String error = task.getException().getMessage();
+                        Log.e(TAG, error);
+                        //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+
+            //Signed petitions support count
+            firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                    if (queryDocumentSnapshots != null) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+                            holder.supportersProgressBar.setMax(totalSupporters);
+                            int size = queryDocumentSnapshots.size();
+                            holder.supportersProgressBar.setProgress(size);
+                            holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
+
+                        } else {
+                            //Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+            });
+            //Signed Petition Feature
+
+            firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().exists()) {
+
+                            //holder.btLikeAnnouncement.setEnabled(false);
+                            holder.btSignPetition.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                            holder.btSignPetition.setTextColor(mContext.getResources().getColor(android.R.color.white));
+                            holder.btSignPetition.setText("Signed!");
+                            // Toast.makeText(mContext, "Data Exist", Toast.LENGTH_SHORT).show();
+                        } else {
+                            //  Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        String error = task.getException().getMessage();
+                        Log.e(TAG, error);
+                    }
+                }
+            });
+
+
+            holder.btSignPetition.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (!task.getResult().exists()) {
+
+                                    Map<String, Object> signatureMap = new HashMap<>();
+                                    signatureMap.put("timestamp", FieldValue.serverTimestamp());
+                                    signatureMap.put("user_name", firebaseAuth.getCurrentUser().getDisplayName());
+                                    firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).set(signatureMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+
+                                                //holder.btLikeAnnouncement.setEnabled(false);
+                                                holder.btSignPetition.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                                                holder.btSignPetition.setTextColor(mContext.getResources().getColor(android.R.color.white));
+                                                holder.btSignPetition.setText("Signed!");
+                                            } else {
+                                                String error = task.getException().getMessage();
+                                                Log.e(TAG, error);
+                                            }
+                                        }
+                                    });
+
+                                } else {
+                                    firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
+                                    holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
+                                    holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
+                                    holder.btSignPetition.setText("Unsigned!");
+                                    //  Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } else {
+                                String error = task.getException().getMessage();
+                                Log.e(TAG, error);
+                            }
+                        }
+                    });
+
+                }
+            });
+
+            holder.btCreateAnnouncement.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (stPetitionPostId.isEmpty()||stPetitionPostId == null){
+                        Log.w(TAG, stPetitionPostId);
+                    }else {
+                        Intent i = new Intent(mContext, NewAnnouncementActivity.class);
+                        Log.w(TAG, stPetitionPostId);
+                        i.putExtra("stPetitionPostId", stPetitionPostId);
+                        mContext.startActivity(i);
+                    }
+
+                }
+            });
+        }
+
+
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -107,6 +238,8 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
         public ImageView petionCoverImageView;
         public Button btSignPetition;
         public CircleImageView profileImage;
+        private ImageButton btCreateAnnouncement;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
@@ -117,7 +250,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             petionCoverImageView = itemView.findViewById(R.id.imageViewPetitionCover);
             btSignPetition = itemView.findViewById(R.id.btSignPetition);
             profileImage = itemView.findViewById(R.id.profile_image_petitions);
-
+            btCreateAnnouncement = itemView.findViewById(R.id.btCreateAnnouncement);
         }
     }
 }

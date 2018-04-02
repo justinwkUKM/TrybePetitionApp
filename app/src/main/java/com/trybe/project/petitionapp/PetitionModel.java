@@ -8,21 +8,27 @@ import java.util.Date;
  * Created by MyXLab on 26/3/2018.
  */
 
-public class PetitionModel {
+public class PetitionModel extends PetitionPostId {
     private String petition_author, petition_cover_image_url, petition_cover_image_thumb_url,
             petition_title, petition_desc, petition_target_supporters, petition_start_date,
             petition_stop_date;
     private Date petition_timestamp;
+    private AnnouncementModel announcementModel;
 
     public PetitionModel() {
     }
 
-    public Date getPetition_timestamp() {
-        return petition_timestamp;
-    }
-
-    public void setPetition_timestamp(Date petition_timestamp) {
+    public PetitionModel(String petition_author, String petition_cover_image_url, String petition_cover_image_thumb_url, String petition_title, String petition_desc, String petition_target_supporters, String petition_start_date, String petition_stop_date, Date petition_timestamp, AnnouncementModel announcementModel) {
+        this.petition_author = petition_author;
+        this.petition_cover_image_url = petition_cover_image_url;
+        this.petition_cover_image_thumb_url = petition_cover_image_thumb_url;
+        this.petition_title = petition_title;
+        this.petition_desc = petition_desc;
+        this.petition_target_supporters = petition_target_supporters;
+        this.petition_start_date = petition_start_date;
+        this.petition_stop_date = petition_stop_date;
         this.petition_timestamp = petition_timestamp;
+        this.announcementModel = announcementModel;
     }
 
     public String getPetition_author() {
@@ -87,5 +93,21 @@ public class PetitionModel {
 
     public void setPetition_stop_date(String petition_stop_date) {
         this.petition_stop_date = petition_stop_date;
+    }
+
+    public Date getPetition_timestamp() {
+        return petition_timestamp;
+    }
+
+    public void setPetition_timestamp(Date petition_timestamp) {
+        this.petition_timestamp = petition_timestamp;
+    }
+
+    public AnnouncementModel getAnnouncementModel() {
+        return announcementModel;
+    }
+
+    public void setAnnouncementModel(AnnouncementModel announcementModel) {
+        this.announcementModel = announcementModel;
     }
 }

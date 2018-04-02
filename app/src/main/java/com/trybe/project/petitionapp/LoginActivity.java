@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         startActivity(new Intent(LoginActivity.this, MainNavigationActivity.class));
-        Toast.makeText(this, "You are logged in", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "You are logged in", Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -213,11 +213,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void hideProgressDialog() {
-        Toast.makeText(this, "hideProgressDialog", Toast.LENGTH_SHORT).show();
+         //TODO: ADD a progress bar in this activity
+        //Toast.makeText(this, "hideProgressDialog", Toast.LENGTH_SHORT).show();
     }
 
     private void showProgressDialog() {
-        Toast.makeText(this, "showProgressDialog", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "showProgressDialog", Toast.LENGTH_SHORT).show();
 
     }
     // [END auth_with_google]

@@ -46,8 +46,14 @@
     <string name="end_date">End Date</string>
     <string name="date_format">dd/mm/yy</string>
     <string name="add_petition">Add Petition</string>
+    <string name="add_petition_announcement">Add Announcement</string>
+    <string name="petition_announcement_name">Announcement Title</string>
+    <string name="petition_announcement_title_desc">Tell us what something new about this petition</string>
+    <string name="petition_announcement_description">Announcement Details</string>
+    <string name="petition_announcement_description_desc">Tell us a little bit about your Announcement</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_petition">Sign this petition</string>
+    <string name="image_description">Image Description</string>
 </resources>

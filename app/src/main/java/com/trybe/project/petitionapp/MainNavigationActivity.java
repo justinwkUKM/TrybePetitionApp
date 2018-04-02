@@ -2,7 +2,6 @@ package com.trybe.project.petitionapp;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -47,18 +46,20 @@ public class MainNavigationActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
             switch (item.getItemId()) {
                 case R.id.navigation_petitions:
-                    replaceFragment(petitionsFragment);
+                    replaceFragment(petitionsFragment,currentFragment);
                     return true;
                 case R.id.navigation_news:
-                    replaceFragment(newsFragment);
+                    replaceFragment(newsFragment,currentFragment);
                     return true;
                 case R.id.navigation_victories:
-                   replaceFragment(victoriesFragment);
+                   replaceFragment(victoriesFragment,currentFragment);
                     return true;
                 case R.id.navigation_profile:
-                    replaceFragment(profileFragment);
+                    replaceFragment(profileFragment,currentFragment);
+                    startActivity(new Intent(MainNavigationActivity.this, NewAnnouncementActivity.class));
                     return true;
                 case R.id.navigation_add_new:
                     startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
@@ -89,7 +90,15 @@ public class MainNavigationActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
+        initializeFragments();
 
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        //BottomNavigationViewHelper.disableShiftMode(navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void initializeFragments() {
         //initializeFragments
         petitionsFragment = new PetitionsFragment();
         newsFragment = new NewsFragment();
@@ -97,9 +106,20 @@ public class MainNavigationActivity extends AppCompatActivity {
         victoriesFragment = new VictoriesFragment();
         profileFragment = new ProfileFragment();
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        //BottomNavigationViewHelper.disableShiftMode(navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.add(R.id.mainContainer, petitionsFragment);
+        fragmentTransaction.add(R.id.mainContainer, newsFragment);
+        fragmentTransaction.add(R.id.mainContainer, addNewPetitionFragment);
+        fragmentTransaction.add(R.id.mainContainer, victoriesFragment);
+        fragmentTransaction.add(R.id.mainContainer, profileFragment);
+
+        fragmentTransaction.hide(newsFragment);
+        fragmentTransaction.hide(addNewPetitionFragment);
+        fragmentTransaction.hide(victoriesFragment);
+        fragmentTransaction.hide(profileFragment);
+
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -129,7 +149,7 @@ public class MainNavigationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        replaceFragment(petitionsFragment);
+        //replaceFragment(petitionsFragment);
     }
 
     private void retrieveFromFirestore(FirebaseUser currentUser) {
@@ -169,6 +189,8 @@ public class MainNavigationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
         switch (item.getItemId()) {
             case R.id.menu_search:
                 // Action goes here
@@ -190,9 +212,45 @@ public class MainNavigationActivity extends AppCompatActivity {
         }
     }
 
-    public void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment, Fragment currentFragment){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainContainer,fragment);
+         if (fragment == petitionsFragment){
+             fragmentTransaction.hide(addNewPetitionFragment);
+             fragmentTransaction.hide(newsFragment);
+             fragmentTransaction.hide(profileFragment);
+             fragmentTransaction.hide(victoriesFragment);
+         }
+
+        if (fragment == addNewPetitionFragment ){
+            fragmentTransaction.hide(petitionsFragment);
+            fragmentTransaction.hide(newsFragment);
+            fragmentTransaction.hide(profileFragment);
+            fragmentTransaction.hide(victoriesFragment);
+        }
+
+        if (fragment == newsFragment){
+            fragmentTransaction.hide(addNewPetitionFragment);
+            fragmentTransaction.hide( petitionsFragment);
+            fragmentTransaction.hide(profileFragment);
+            fragmentTransaction.hide(victoriesFragment);
+        }
+
+        if (fragment == profileFragment){
+            fragmentTransaction.hide(addNewPetitionFragment);
+            fragmentTransaction.hide(newsFragment);
+            fragmentTransaction.hide( petitionsFragment);
+            fragmentTransaction.hide(victoriesFragment);
+        }
+
+        if (fragment == victoriesFragment){
+            fragmentTransaction.hide(addNewPetitionFragment);
+            fragmentTransaction.hide(newsFragment);
+            fragmentTransaction.hide(profileFragment);
+            fragmentTransaction.hide( petitionsFragment);
+        }
+
+        //fragmentTransaction.replace(R.id.mainContainer,fragment);
+        fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
 
     }

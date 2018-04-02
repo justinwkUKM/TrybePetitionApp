@@ -201,14 +201,26 @@
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnAddPetition"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/email_button_bg"
-            android:textColor="@android:color/white"
-            android:text="@string/add_petition"/>
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimaryDark" >
+
+            <Button
+                android:id="@+id/btnAddPetition"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_sign_24dp"
+                android:gravity="center"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:textColor="@android:color/white"
+                android:text="@string/add_petition" />
+        </FrameLayout>
     </LinearLayout>
 </ScrollView>
 
