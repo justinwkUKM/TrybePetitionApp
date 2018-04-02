@@ -83,6 +83,7 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
 
             user_id = announcementModels.get(position).getAnnouncement_author();
 
+            //users collection
             firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
