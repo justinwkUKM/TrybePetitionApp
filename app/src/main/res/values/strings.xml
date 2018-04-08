@@ -36,6 +36,7 @@
     <string name="button_login_with_google">Login with google</string>
     <string name="hint_name">Name</string>
     <string name="save_account_settings">Save Account Settings</string>
+    <string name="edit_account_settings">Edit Account Settings</string>
     <string name="petition_name">Petition Name</string>
     <string name="petition_title_desc">Tell us what you are upto</string>
     <string name="petition_description">Petition Description</string>

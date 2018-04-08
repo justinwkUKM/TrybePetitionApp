@@ -1,8 +1,9 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.views.activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,11 +36,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import com.trybe.project.petitionapp.R;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 
 public class AccountSetupActivity extends AppCompatActivity {
@@ -59,6 +67,7 @@ public class AccountSetupActivity extends AppCompatActivity {
     private String user_id;
     private boolean isSuccessUpload = false;
     private boolean isChanged = false;
+    private Bitmap compressedImageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +76,10 @@ public class AccountSetupActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.setupAccountActivityToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Account Settings");
-
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         user_id = firebaseAuth.getCurrentUser().getUid();
-
         profileImage = findViewById(R.id.profile_image_petitions);
         etEmail = findViewById(R.id.etEmailAS);
         etName = findViewById(R.id.etNameAS);
@@ -80,7 +87,6 @@ public class AccountSetupActivity extends AppCompatActivity {
         setupProgress = findViewById(R.id.progressBarAS);
         setupProgress.setVisibility(View.VISIBLE);
         btSave.setEnabled(false);
-
         retrieveFromFirestore();
 
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +120,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                         user_id = firebaseAuth.getCurrentUser().getUid();
                         setupProgress.setVisibility(View.VISIBLE);
 
-                        StorageReference image_path = storageReference.child("profile_image").child(user_id + ".jpg");
+                        /*StorageReference image_path = storageReference.child("profile_image").child(user_id + ".jpg");
                         image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -134,7 +140,43 @@ public class AccountSetupActivity extends AppCompatActivity {
                                     String error = task.getException().getMessage();
                                 }
                             }
+                        });*/
+
+                        File newImageFile = new File(mainImageURI.getPath());
+                        try {
+                            compressedImageFile = new Compressor(AccountSetupActivity.this)
+                                    .setMaxHeight(100)
+                                    .setMaxWidth(100)
+                                    .setQuality(5)
+                                    .compressToBitmap(newImageFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] thumb_data = baos.toByteArray();
+
+                        UploadTask uploadTask = storageReference.child("profile_image").child(user_id + ".jpg").putBytes(thumb_data);
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.e(TAG, "Success");
+                                Uri downloadThumbUri = taskSnapshot.getDownloadUrl();
+                                saveToFirestore(downloadThumbUri, user_id, name, email);
+                                setupProgress.setVisibility(View.INVISIBLE);
+                                if (isSuccessUpload) {
+                                    gotoMain();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //error handling
+                                setupProgress.setVisibility(View.INVISIBLE);
+                                Log.e(TAG, e.getMessage());
+                            }
                         });
+
 
                     } else {
                         gotoMain();

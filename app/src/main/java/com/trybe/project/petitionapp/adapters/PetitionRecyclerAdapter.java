@@ -1,12 +1,10 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,8 +26,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.models.PetitionModel;
+import com.trybe.project.petitionapp.views.activities.NewAnnouncementActivity;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,11 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+        holder.setIsRecyclable(false);
+
         String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id;
+        final String[] user_profile_image = new String[1];
         final String  stCurrentUserId, stPetitionPostId;
         if (petitionModels != null) {
             //long milliSeconds = announcementModels.get(position).getPetition_timestamp().getTime();
@@ -83,14 +86,15 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             holder.tvPetitionTitle.setText(stPetitionTitle);
             holder.tvPetitionDesc.setText(stPetitionDesc);
 
-
-            Random rn = new Random();
-            int range = 6 - 2 + 1;
-            final int progress = rn.nextInt(range) + 2;
+            final int progress = 0;
             final int totalSupporters = Integer.parseInt(stPetitionSupporters);
             holder.supportersProgressBar.setMax(totalSupporters);
-            holder.supportersProgressBar.setProgress(totalSupporters / progress);
-            holder.tvPetitionSupporters.setText(totalSupporters / progress + " of " + stPetitionSupporters + " have signed!");
+            holder.supportersProgressBar.setProgress(progress);
+            holder.tvPetitionSupporters.setText(progress + " of " + stPetitionSupporters + " have signed!");
+            holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
+            holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
+            holder.btSignPetition.setText("Unsigned!");
+
 
             final RequestOptions placeHolderRequest = new RequestOptions();
             placeHolderRequest.placeholder(R.drawable.com_facebook_profile_picture_blank_square);
@@ -98,12 +102,13 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
             user_id = petitionModels.get(position).getPetition_author();
             firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         String user_name = task.getResult().getString("user_name");
-                        String user_profile_image = task.getResult().getString("user_profile_image");
-                        Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(user_profile_image).into(holder.profileImage);
+                        user_profile_image[0] = task.getResult().getString("user_profile_image");
+                        Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(user_profile_image[0]).into(holder.profileImage);
 
                     } else {
 
@@ -127,14 +132,18 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
 
                         } else {
+                            holder.supportersProgressBar.setMax(totalSupporters);
+                            int size = 0;
+                            holder.supportersProgressBar.setProgress(size);
+                            holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
                             //Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                 }
             });
-            //Signed Petition Feature
 
+            //Signed Petition Feature
             firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -172,6 +181,9 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                     Map<String, Object> signatureMap = new HashMap<>();
                                     signatureMap.put("timestamp", FieldValue.serverTimestamp());
                                     signatureMap.put("user_name", firebaseAuth.getCurrentUser().getDisplayName());
+                                    signatureMap.put("user_id", firebaseAuth.getCurrentUser().getUid());
+                                    signatureMap.put("user_profile_image_url", user_profile_image[0]);
+
                                     firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).set(signatureMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -221,11 +233,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                 }
             });
         }
-
-
-
     }
-
 
     @Override
     public int getItemCount() {

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.trybe.project.petitionapp.AccountSetupActivity">
+    tools:context="com.trybe.project.petitionapp.views.activities.AccountSetupActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/setupAccountActivityToolbar"
@@ -88,5 +88,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setupAccountActivityToolbar" />
+
+
 
 </android.support.constraint.ConstraintLayout>

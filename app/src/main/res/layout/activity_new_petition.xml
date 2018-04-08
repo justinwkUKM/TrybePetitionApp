@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.trybe.project.petitionapp.NewPetitionActivity">
+    tools:context="com.trybe.project.petitionapp.views.activities.NewPetitionActivity">
 
 
     <LinearLayout
@@ -164,10 +164,10 @@
                         android:id="@+id/etPetitionStartDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
                         android:drawableRight="@drawable/ic_date_range_black_24dp"
                         android:hint="@string/date_format"
                         android:inputType="date"
-
                         android:textSize="14sp" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -195,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/ic_date_range_black_24dp"
                         android:hint="@string/date_format"
-
+                        android:focusable="false"
                         android:inputType="date"
                         android:textSize="14sp" />
                 </android.support.design.widget.TextInputLayout>

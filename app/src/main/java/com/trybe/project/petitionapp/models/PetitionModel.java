@@ -1,6 +1,4 @@
-package com.trybe.project.petitionapp;
-
-import com.google.firebase.Timestamp;
+package com.trybe.project.petitionapp.models;
 
 import java.util.Date;
 

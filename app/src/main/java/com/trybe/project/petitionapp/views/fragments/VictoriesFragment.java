@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp.fragments;
+package com.trybe.project.petitionapp.views.fragments;
 
 
 import android.os.Bundle;

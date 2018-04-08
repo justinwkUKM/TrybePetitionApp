@@ -1,5 +1,6 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.views.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -29,18 +31,22 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.others.DatePickerFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import id.zelory.compressor.Compressor;
 
-public class NewPetitionActivity extends AppCompatActivity {
+public class NewPetitionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String TAG = NewPetitionActivity.class.getSimpleName();
     private Toolbar newPetitionToolbar;
@@ -59,6 +65,8 @@ public class NewPetitionActivity extends AppCompatActivity {
     private String user_id;
     String randomName;
     private Bitmap compressedImageFile;
+    private boolean etStartClicked, etStopClicked = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +146,7 @@ public class NewPetitionActivity extends AppCompatActivity {
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                         Log.e(TAG, "Success");
                                         String downloadThumbUri = taskSnapshot.getDownloadUrl().toString();
-                                        saveToFirestore(download_uri,downloadThumbUri, user_id, stPetitionTitle, stPetitionDescription, stPetitionTargetSupporters, stPetitionStartDate, stPetitionStopDate, randomName);
+                                        saveToFirestore(download_uri, downloadThumbUri, user_id, stPetitionTitle, stPetitionDescription, stPetitionTargetSupporters, stPetitionStartDate, stPetitionStopDate, randomName);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -160,7 +168,39 @@ public class NewPetitionActivity extends AppCompatActivity {
                 }
             }
         });
+
+        etPetitionStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment fragment = new DatePickerFragment();
+                fragment.show(getSupportFragmentManager(), "Starting Date");
+                etStartClicked = true;
+            }
+        });
+
+        etPetitionStopDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment fragment = new DatePickerFragment();
+                fragment.show(getSupportFragmentManager(), "Ending Date");
+                etStopClicked = true;
+            }
+        });
     }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Calendar cal = new GregorianCalendar(year, month, day);
+        final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        if (etStartClicked) {
+            etPetitionStartDate.setText(dateFormat.format(cal.getTime()));
+            etStartClicked=false;
+        } else if (etStopClicked) {
+            etPetitionStopDate.setText(dateFormat.format(cal.getTime()));
+            etStopClicked=false;
+        }
+    }
+
 
     private void saveToFirestore(Uri download_uri, String downloadThumbUri, String user_id, String stPetitionTitle,
                                  String stPetitionDescription, String stPetitionTargetSupporters,
@@ -222,4 +262,6 @@ public class NewPetitionActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

@@ -1,17 +1,14 @@
-package com.trybe.project.petitionapp.fragments;
+package com.trybe.project.petitionapp.views.fragments;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -21,8 +18,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.trybe.project.petitionapp.PetitionModel;
-import com.trybe.project.petitionapp.PetitionRecyclerAdapter;
+import com.trybe.project.petitionapp.models.AnnouncementModel;
+import com.trybe.project.petitionapp.adapters.AnnouncementRecyclerAdapter;
 import com.trybe.project.petitionapp.R;
 
 import java.util.ArrayList;
@@ -32,19 +29,20 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PetitionsFragment extends Fragment {
+public class NewsFragment extends Fragment {
 
-    private RecyclerView petitionsListView;
-    private PetitionRecyclerAdapter petitionRecyclerAdapter;
+    public static final int LIMIT = 5;
+    private RecyclerView announcementListView;
+    private AnnouncementRecyclerAdapter announcementRecyclerAdapter;
 
-    private List<PetitionModel> petitionModelList;
+    private List<AnnouncementModel> announcementModelList;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
 
-    public PetitionsFragment() {
+    public NewsFragment() {
         // Required empty public constructor
     }
 
@@ -52,15 +50,15 @@ public class PetitionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_petitions, container, false);
-        petitionModelList = new ArrayList<>();
-        petitionsListView = view.findViewById(R.id.petitionsRecyclerView);
-        petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
+        announcementModelList = new ArrayList<>();
+        announcementListView = view.findViewById(R.id.announcementRecyclerView);
+        announcementRecyclerAdapter = new AnnouncementRecyclerAdapter(announcementModelList, getActivity());
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(container.getContext());
-        petitionsListView.setLayoutManager(mLayoutManager);
+        announcementListView.setLayoutManager(mLayoutManager);
 
-        petitionsListView.setAdapter(petitionRecyclerAdapter);
+        announcementListView.setAdapter(announcementRecyclerAdapter);
 
         /*if (petitionRecyclerAdapter.getItemCount()==0){
             Toast.makeText(getActivity(), "No petitions exist yet", Toast.LENGTH_SHORT).show();
@@ -71,7 +69,7 @@ public class PetitionsFragment extends Fragment {
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseFirestore = FirebaseFirestore.getInstance();
 
-            petitionsListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            announcementListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
@@ -79,13 +77,13 @@ public class PetitionsFragment extends Fragment {
                     Boolean reachedBottom = !recyclerView.canScrollVertically(1);
                     if (reachedBottom) {
                         //Toast.makeText(getActivity(), "reached end", Toast.LENGTH_SHORT).show();
-                        loadMorePetitions();
+                        loadMoreAnnouncements();
                     }
                 }
             });
 
             Query firstQuery = firebaseFirestore.collection("Petitions").
-                    orderBy("petition_timestamp", Query.Direction.DESCENDING).limit(3);
+                    orderBy("petition_timestamp", Query.Direction.DESCENDING).limit(LIMIT);
 
             //added getActivity as first parameter to bind this functionality to the lifecycle of the Activity
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -93,7 +91,7 @@ public class PetitionsFragment extends Fragment {
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                     if (queryDocumentSnapshots != null) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            if (isFirstPageFirstLoad){
+                            if (isFirstPageFirstLoad) {
                                 lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                             }
 
@@ -101,7 +99,7 @@ public class PetitionsFragment extends Fragment {
                                 if (doc.getType() == DocumentChange.Type.ADDED) {
                                     String petitionPostId = doc.getDocument().getId();
 
-                                    /*firebaseFirestore.collection("Petitions/" + petitionPostId + "/Announcements").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                                    firebaseFirestore.collection("Petitions/" + petitionPostId + "/Announcements").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                                         @Override
                                         public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                                             if (queryDocumentSnapshots != null) {
@@ -110,7 +108,14 @@ public class PetitionsFragment extends Fragment {
                                                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                                         String announcementPostId = doc.getDocument().getId();
                                                         Log.e("Announcement ID", announcementPostId);
+                                                        AnnouncementModel petitionModel = doc.getDocument().toObject(AnnouncementModel.class).withId(announcementPostId);
+                                                            if (isFirstPageFirstLoad){
+                                                                announcementModelList.add(petitionModel);
+                                                            }else {
+                                                                 announcementModelList.add(0,petitionModel);
+                                                            }
 
+                                                            announcementRecyclerAdapter.notifyDataSetChanged();
 
                                                     }
                                                 } else {
@@ -119,22 +124,13 @@ public class PetitionsFragment extends Fragment {
                                             }
 
                                         }
-                                    });*/
-
-
-                                    PetitionModel petitionModel = doc.getDocument().toObject(PetitionModel.class).withId(petitionPostId);
-                                    if (isFirstPageFirstLoad){
-                                        petitionModelList.add(petitionModel);
-                                    }else {
-                                        petitionModelList.add(0,petitionModel);
-                                    }
-
-                                    petitionRecyclerAdapter.notifyDataSetChanged();
+                                    });
 
                                 } else {
 
                                 }
-                            } isFirstPageFirstLoad =false;
+                            }
+                            isFirstPageFirstLoad = false;
                         } else {
                         }
 
@@ -150,25 +146,44 @@ public class PetitionsFragment extends Fragment {
 
     }
 
-    public void loadMorePetitions() {
+    public void loadMoreAnnouncements() {
         Query nextQuery = firebaseFirestore.collection("Petitions")
                 .orderBy("petition_timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
-                .limit(3);
+                .limit(LIMIT);
 
-        nextQuery.addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
+        nextQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots != null) {
-                    if (!queryDocumentSnapshots.isEmpty()) {lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String petitionPostId = doc.getDocument().getId();
-                                PetitionModel petitionModel = doc.getDocument().toObject(PetitionModel.class).withId(petitionPostId);
+                                firebaseFirestore.collection("Petitions/" + petitionPostId + "/Announcements").addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                                        if (queryDocumentSnapshots != null) {
+                                            if (!queryDocumentSnapshots.isEmpty()) {
 
-                                petitionModelList.add(petitionModel);
-                                petitionRecyclerAdapter.notifyDataSetChanged();
+                                                for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                                                    String announcementPostId = doc.getDocument().getId();
+                                                    Log.e("Announcement ID", announcementPostId);
+                                                    AnnouncementModel petitionModel = doc.getDocument().toObject(AnnouncementModel.class).withId(announcementPostId);
+                                                    announcementModelList.add(petitionModel);
+                                                    announcementRecyclerAdapter.notifyDataSetChanged();
+
+                                                }
+                                            } else {
+                                                Log.e("Announcement", "Not Exist");;
+                                            }
+                                        }
+
+                                    }
+                                });
+
 
                             } else {
 
@@ -183,5 +198,6 @@ public class PetitionsFragment extends Fragment {
             }
         });
     }
+
 
 }

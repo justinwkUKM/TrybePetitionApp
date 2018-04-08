@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.views.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -27,6 +27,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.trybe.project.petitionapp.R;
 
 import java.util.ArrayList;
 import java.util.List;

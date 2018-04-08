@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.others;
 
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;

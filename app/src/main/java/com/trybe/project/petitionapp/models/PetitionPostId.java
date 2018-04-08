@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.models;
 
 import android.support.annotation.NonNull;
 

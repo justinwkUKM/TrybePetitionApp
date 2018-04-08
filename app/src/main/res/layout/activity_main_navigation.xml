@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.trybe.project.petitionapp.MainNavigationActivity">
+    tools:context="com.trybe.project.petitionapp.views.activities.MainNavigationActivity">
 
     <FrameLayout
         android:id="@+id/mainContainer"

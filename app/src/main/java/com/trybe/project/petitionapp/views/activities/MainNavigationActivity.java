@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.views.activities;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,13 +22,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.trybe.project.petitionapp.fragments.AddNewPetitionFragment;
-import com.trybe.project.petitionapp.fragments.NewsFragment;
-import com.trybe.project.petitionapp.fragments.PetitionsFragment;
-import com.trybe.project.petitionapp.fragments.ProfileFragment;
-import com.trybe.project.petitionapp.fragments.VictoriesFragment;
+import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.views.fragments.AddNewPetitionFragment;
+import com.trybe.project.petitionapp.views.fragments.NewsFragment;
+import com.trybe.project.petitionapp.views.fragments.PetitionsFragment;
+import com.trybe.project.petitionapp.views.fragments.ProfileFragment;
+import com.trybe.project.petitionapp.views.fragments.VictoriesFragment;
 
-public class MainNavigationActivity extends AppCompatActivity {
+public class MainNavigationActivity extends BaseActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -59,7 +59,7 @@ public class MainNavigationActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_profile:
                     replaceFragment(profileFragment,currentFragment);
-                    startActivity(new Intent(MainNavigationActivity.this, NewAnnouncementActivity.class));
+                    //startActivity(new Intent(MainNavigationActivity.this, NewAnnouncementActivity.class));
                     return true;
                 case R.id.navigation_add_new:
                     startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));

@@ -1,4 +1,4 @@
-package com.trybe.project.petitionapp;
+package com.trybe.project.petitionapp.views.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
