@@ -79,6 +79,7 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
             firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    //TODO Fix This Error: Failed to get document because the client is offline
                     if (task.getResult().exists()){
                         if (task.isSuccessful()) {
                             String user_name = task.getResult().getString("user_name");

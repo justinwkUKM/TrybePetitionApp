@@ -67,7 +67,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.setIsRecyclable(false);
+        //holder.setIsRecyclable(false);
 
         String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id;
         final String[] user_profile_image = new String[1];
