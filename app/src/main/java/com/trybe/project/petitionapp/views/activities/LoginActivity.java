@@ -1,8 +1,13 @@
 package com.trybe.project.petitionapp.views.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -29,6 +34,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.trybe.project.petitionapp.R;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity {
@@ -56,6 +63,7 @@ public class LoginActivity extends BaseActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        printHashKey(this);
 
         findViewById(R.id.googleSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,5 +229,20 @@ public class LoginActivity extends BaseActivity {
     }
     // [END auth_with_google]
 
+    public void printHashKey(Context pContext) {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.e(TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(TAG, "printHashKey()", e);
+        }
+    }
 
 }
