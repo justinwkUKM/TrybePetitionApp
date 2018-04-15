@@ -66,7 +66,7 @@ public class PetitionsFragment extends Fragment {
         petitionsListView = view.findViewById(R.id.petitionsRecyclerView);
         petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(container.getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         petitionsListView.setLayoutManager(mLayoutManager);
 
         petitionsListView.setAdapter(petitionRecyclerAdapter);
