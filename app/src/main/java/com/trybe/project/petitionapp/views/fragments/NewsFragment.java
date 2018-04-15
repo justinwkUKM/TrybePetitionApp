@@ -9,6 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -18,9 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.trybe.project.petitionapp.models.AnnouncementModel;
-import com.trybe.project.petitionapp.adapters.AnnouncementRecyclerAdapter;
 import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.adapters.AnnouncementRecyclerAdapter;
+import com.trybe.project.petitionapp.models.AnnouncementModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +45,10 @@ public class NewsFragment extends Fragment {
 
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
+    private RecyclerView announcementRecyclerView;
+    private android.widget.Button buttonRefresh;
+    private android.widget.TextView textViewPlaceholder;
+    private android.widget.RelativeLayout layourPlaceHolder;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -51,6 +59,10 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
+        this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
+        this.textViewPlaceholder = (TextView) view.findViewById(R.id.textViewPlaceholder);
+        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
+        this.announcementRecyclerView = (RecyclerView) view.findViewById(R.id.announcementRecyclerView);
         announcementModelList = new ArrayList<>();
         announcementListView = view.findViewById(R.id.announcementRecyclerView);
         announcementRecyclerAdapter = new AnnouncementRecyclerAdapter(announcementModelList, getActivity());
@@ -116,10 +128,13 @@ public class NewsFragment extends Fragment {
                                                             }
 
                                                             announcementRecyclerAdapter.notifyDataSetChanged();
+                                                        checkForEmptyView();
 
                                                     }
                                                 } else {
                                                     Log.e("Announcement", "Not Exist");;
+                                                    checkForEmptyView();
+
                                                 }
                                             }
 
@@ -134,12 +149,18 @@ public class NewsFragment extends Fragment {
                         } else {
                         }
 
+
                     } else {
 
                     }
 
                 }
+
             });
+
+
+
+
         }
 
         return view;
@@ -199,5 +220,22 @@ public class NewsFragment extends Fragment {
         });
     }
 
+    private void checkForEmptyView() {
+        if (announcementRecyclerAdapter.getItemCount() == 0) {
+            if (announcementModelList.isEmpty()) {
+                announcementListView.setVisibility(View.GONE);
+                layourPlaceHolder.setVisibility(View.VISIBLE);
+                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().recreate();
 
+                    }
+                });
+            } else {
+                announcementListView.setVisibility(View.VISIBLE);
+                layourPlaceHolder.setVisibility(View.GONE);
+            }
+        }
+    }
 }

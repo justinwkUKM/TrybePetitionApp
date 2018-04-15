@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -17,9 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.trybe.project.petitionapp.models.PetitionModel;
-import com.trybe.project.petitionapp.adapters.PetitionRecyclerAdapter;
 import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.adapters.PetitionRecyclerAdapter;
+import com.trybe.project.petitionapp.models.PetitionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,10 @@ public class PetitionsFragment extends Fragment {
 
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
+    private RecyclerView petitionsRecyclerView;
+    private android.widget.Button buttonRefresh;
+    private android.widget.TextView textViewPlaceholder;
+    private android.widget.RelativeLayout layourPlaceHolder;
 
     public PetitionsFragment() {
         // Required empty public constructor
@@ -50,6 +58,10 @@ public class PetitionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_petitions, container, false);
+        this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
+        this.textViewPlaceholder = (TextView) view.findViewById(R.id.textViewPlaceholder);
+        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
+        this.petitionsRecyclerView = (RecyclerView) view.findViewById(R.id.petitionsRecyclerView);
         petitionModelList = new ArrayList<>();
         petitionsListView = view.findViewById(R.id.petitionsRecyclerView);
         petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
@@ -136,9 +148,8 @@ public class PetitionsFragment extends Fragment {
                         }
 
                     } else {
-
                     }
-
+                    checkForEmptyView();
                 }
             });
         }
@@ -179,6 +190,27 @@ public class PetitionsFragment extends Fragment {
 
             }
         });
+    }
+
+    private void checkForEmptyView() {
+        if (petitionRecyclerAdapter.getItemCount() == 0) {
+            //Toast.makeText(getActivity(), "NO Data Found", Toast.LENGTH_SHORT).show();
+            if (petitionModelList.isEmpty()) {
+                petitionsListView.setVisibility(View.GONE);
+                layourPlaceHolder.setVisibility(View.VISIBLE);
+                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().recreate();
+
+                        //Toast.makeText(getActivity(), "NO Data Found On Press", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                petitionsListView.setVisibility(View.VISIBLE);
+                layourPlaceHolder.setVisibility(View.GONE);
+            }
+        }
     }
 
 }

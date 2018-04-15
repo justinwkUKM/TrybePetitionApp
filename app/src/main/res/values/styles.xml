@@ -9,6 +9,9 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!--enable windows content transitions-->
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

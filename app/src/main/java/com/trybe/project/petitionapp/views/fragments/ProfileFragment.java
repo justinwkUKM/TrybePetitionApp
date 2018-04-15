@@ -1,21 +1,22 @@
 package com.trybe.project.petitionapp.views.fragments;
 
 
+import android.app.ActivityOptions;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +25,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -39,9 +38,6 @@ import com.trybe.project.petitionapp.R;
 import com.trybe.project.petitionapp.adapters.PetitionRecyclerAdapter;
 import com.trybe.project.petitionapp.models.PetitionModel;
 import com.trybe.project.petitionapp.views.activities.AccountSetupActivity;
-import com.trybe.project.petitionapp.views.activities.LoginActivity;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +69,11 @@ public class ProfileFragment extends Fragment {
     private List<PetitionModel> petitionModelList;
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
-
+    private android.support.constraint.ConstraintLayout consLayout;
+    private RecyclerView myPetitionsRecyclerView;
+    private Button buttonRefresh;
+    private TextView textViewPlaceHolder;
+    private RelativeLayout layoutPlaceHolder;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -85,6 +85,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        this.textViewPlaceHolder = (TextView) view.findViewById(R.id.textViewPlaceholder);
+        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
+        this.layoutPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
+        this.myPetitionsRecyclerView = (RecyclerView) view.findViewById(R.id.myPetitionsRecyclerView);
+        this.consLayout = (ConstraintLayout) view.findViewById(R.id.consLayout);
         this.petitionsListView = (RecyclerView) view.findViewById(R.id.myPetitionsRecyclerView);
         this.progressBarMyProfile = (ProgressBar) view.findViewById(R.id.progressBarMyProfile);
         this.btEditAccountSettings = (Button) view.findViewById(R.id.btEditAccountSettings);
@@ -97,13 +102,23 @@ public class ProfileFragment extends Fragment {
         progressBarMyProfile.setVisibility(View.VISIBLE);
         btEditAccountSettings.setEnabled(false);
 
+
         retrieveFromFirestore();
+
+
         btEditAccountSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), AccountSetupActivity.class));
+                Intent i = new Intent(getActivity(), AccountSetupActivity.class);
+                Pair[] pairs = new Pair[2];
+                pairs[0] = new Pair<View, String>(profileimage, "imageTransition");
+                pairs[1] = new Pair<View, String>(etNameMP, "nameTransition");
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(), pairs);
+
+                startActivity(i, activityOptions.toBundle());
             }
         });
+
         petitionModelList = new ArrayList<>();
         petitionsListView = view.findViewById(R.id.myPetitionsRecyclerView);
         petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
@@ -144,7 +159,7 @@ public class ProfileFragment extends Fragment {
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                     if (queryDocumentSnapshots != null) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            if (isFirstPageFirstLoad){
+                            if (isFirstPageFirstLoad) {
                                 lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                             }
 
@@ -162,13 +177,13 @@ public class ProfileFragment extends Fragment {
                                         }
 
                                         petitionRecyclerAdapter.notifyDataSetChanged();
-
                                     }
 
                                 } else {
 
                                 }
-                            } isFirstPageFirstLoad =false;
+                            }
+                            isFirstPageFirstLoad = false;
                         } else {
                         }
 
@@ -176,12 +191,36 @@ public class ProfileFragment extends Fragment {
 
                     }
 
+                    checkForEmptyView();
+
                 }
+
             });
         }
 
+
         return view;
 
+    }
+
+    private void checkForEmptyView() {
+        if (petitionRecyclerAdapter.getItemCount() == 0) {
+            //Toast.makeText(getActivity(), "NO Data Found", Toast.LENGTH_SHORT).show();
+            if (petitionModelList.isEmpty()) {
+                myPetitionsRecyclerView.setVisibility(View.GONE);
+                layoutPlaceHolder.setVisibility(View.VISIBLE);
+                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().recreate();
+                        //Toast.makeText(getActivity(), "NO Data Found On Press", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                myPetitionsRecyclerView.setVisibility(View.VISIBLE);
+                layoutPlaceHolder.setVisibility(View.GONE);
+            }
+        }
     }
 
     public void loadMorePetitions() {
@@ -190,11 +229,12 @@ public class ProfileFragment extends Fragment {
                 .startAfter(lastVisible)
                 .limit(LIMIT);
 
-        nextQuery.addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
+        nextQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots != null) {
-                    if (!queryDocumentSnapshots.isEmpty()) {lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
@@ -208,7 +248,6 @@ public class ProfileFragment extends Fragment {
                                     petitionRecyclerAdapter.notifyDataSetChanged();
 
                                 }
-
 
 
                             } else {

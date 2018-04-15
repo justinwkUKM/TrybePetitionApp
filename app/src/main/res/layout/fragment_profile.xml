@@ -25,6 +25,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:src="@drawable/ic_person_outline_black_256dp"
+                android:transitionName="imageTransition"
                 app:civ_border_color="@color/colorAccent"
                 app:civ_border_width="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +45,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/White"
                 android:textSize="18sp"
+                android:transitionName="nameTransition"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btEditAccountSettings"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,10 +89,45 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/consLayout" />
+
+        <RelativeLayout
+            android:id="@+id/layourPlaceHolder"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="200dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+
+            <Button
+                android:id="@+id/buttonRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="Refresh" />
+
+            <TextView
+                android:id="@+id/textViewPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="94dp"
+                android:text="Please Refresh the page" />
+        </RelativeLayout>
 
 
 
