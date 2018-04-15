@@ -3,6 +3,7 @@ package com.trybe.project.petitionapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,12 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -28,7 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.trybe.project.petitionapp.R;
 import com.trybe.project.petitionapp.models.PetitionModel;
+import com.trybe.project.petitionapp.views.activities.MainNavigationActivity;
 import com.trybe.project.petitionapp.views.activities.NewAnnouncementActivity;
+import com.trybe.project.petitionapp.views.activities.NewPetitionActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +74,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
         //holder.setIsRecyclable(false);
 
-        String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id;
+        final String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id, start_date, end_date;
         final String[] user_profile_image = new String[1];
         final String  stCurrentUserId, stPetitionPostId;
         if (petitionModels != null) {
@@ -83,6 +88,10 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             stPetitionSupporters = petitionModels.get(position).getPetition_target_supporters();
             image_url = petitionModels.get(position).getPetition_cover_image_url();
             thumb_url = petitionModels.get(position).getPetition_cover_image_thumb_url();
+            start_date = petitionModels.get(position).getPetition_start_date();
+            end_date = petitionModels.get(position).getPetition_stop_date();
+
+
             holder.tvPetitionTitle.setText(stPetitionTitle);
             holder.tvPetitionDesc.setText(stPetitionDesc);
 
@@ -126,8 +135,15 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                     if (queryDocumentSnapshots != null) {
                         if (!queryDocumentSnapshots.isEmpty()) {
 
+
+
+
                             holder.supportersProgressBar.setMax(totalSupporters);
                             int size = queryDocumentSnapshots.size();
+                            if (size==totalSupporters){
+                                //TODO:Fix This
+                                //saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
+                            }
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
 
@@ -260,5 +276,35 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             profileImage = itemView.findViewById(R.id.profile_image_petitions);
             btCreateAnnouncement = itemView.findViewById(R.id.btCreateAnnouncement);
         }
+    }
+
+    private void saveToFirestore(Uri parse, String thumb_url, String user_id, String stPetitionTitle, String stPetitionDesc, String stPetitionSupporters, String stPetitionPostId, String start_date, String end_date) {
+        Map<String, Object> petitionMap = new HashMap<>();
+        petitionMap.put("v_petition_cover_image_url", parse.toString());
+        petitionMap.put("v_petition_cover_image_thumb_url", thumb_url);
+        petitionMap.put("v_petition_title", stPetitionTitle);
+        petitionMap.put("v_petition_desc", stPetitionDesc);
+        petitionMap.put("v_petition_target_supporters", stPetitionSupporters);
+        petitionMap.put("v_petition_petition_post_id", stPetitionPostId);
+        petitionMap.put("v_petition_start_date", start_date);
+        petitionMap.put("v_petition_timestamp", FieldValue.serverTimestamp());
+        petitionMap.put("v_petition_end_date", end_date);
+        petitionMap.put("v_user_id", user_id);
+
+        firebaseFirestore.collection("Victories").add(petitionMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+
+                if (task.isSuccessful()) {
+                    Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
+                } else {
+                    String error = task.getException().getMessage();
+                    Log.e(TAG, error);
+                    Toast.makeText(mContext, "v_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
     }
 }

@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class PetitionsFragment extends Fragment {
 
-    public static final int LIMIT = 3;
+    public static final int LIMIT = 7;
     private RecyclerView petitionsListView;
     private PetitionRecyclerAdapter petitionRecyclerAdapter;
 

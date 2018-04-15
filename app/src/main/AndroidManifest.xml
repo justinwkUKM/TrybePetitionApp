@@ -67,6 +67,7 @@
         <activity
             android:name=".views.activities.NewPetitionActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:parentActivityName=".views.activities.MainNavigationActivity" />
         <activity
             android:name=".views.activities.SplashActivity"

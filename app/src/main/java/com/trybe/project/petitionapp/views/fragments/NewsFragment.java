@@ -67,7 +67,7 @@ public class NewsFragment extends Fragment {
         announcementListView = view.findViewById(R.id.announcementRecyclerView);
         announcementRecyclerAdapter = new AnnouncementRecyclerAdapter(announcementModelList, getActivity());
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(container.getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         announcementListView.setLayoutManager(mLayoutManager);
 
         announcementListView.setAdapter(announcementRecyclerAdapter);
@@ -128,12 +128,11 @@ public class NewsFragment extends Fragment {
                                                             }
 
                                                             announcementRecyclerAdapter.notifyDataSetChanged();
-                                                        checkForEmptyView();
 
                                                     }
                                                 } else {
                                                     Log.e("Announcement", "Not Exist");;
-                                                    checkForEmptyView();
+                                                    //checkForEmptyView();
 
                                                 }
                                             }
@@ -147,12 +146,14 @@ public class NewsFragment extends Fragment {
                             }
                             isFirstPageFirstLoad = false;
                         } else {
+                            checkForEmptyView();
                         }
 
 
                     } else {
-
+                        checkForEmptyView();
                     }
+
 
                 }
 

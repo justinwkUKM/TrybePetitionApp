@@ -8,9 +8,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -35,6 +37,7 @@ import java.util.List;
 
 public class MainNavigationActivity extends BaseActivity {
 
+    private final String TAG = MainNavigationActivity.class.getSimpleName().toString();
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore firebaseFirestore;
@@ -55,21 +58,33 @@ public class MainNavigationActivity extends BaseActivity {
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.mainContainer);
             switch (item.getItemId()) {
                 case R.id.navigation_petitions:
-                    animateToFragment(petitionsFragment, "petitionsFragment");
+                    replaceFragment(petitionsFragment,currentFragment);
+                    //animateToFragment(petitionsFragment, "petitionsFragment");
                     return true;
                 case R.id.navigation_news:
-                    animateToFragment(newsFragment, "newsFragment");
+                    replaceFragment(newsFragment,currentFragment);
+
+                    // animateToFragment(newsFragment, "newsFragment");
                     return true;
                 case R.id.navigation_victories:
-                    animateToFragment(victoriesFragment, "victoriesFragment");
+                    replaceFragment(victoriesFragment,currentFragment);
+
+                    // animateToFragment(victoriesFragment, "victoriesFragment");
                     return true;
                 case R.id.navigation_profile:
-                    animateToFragment(profileFragment, "profileFragment");
+                    replaceFragment(profileFragment,currentFragment);
+
+                    //animateToFragment(profileFragment, "profileFragment");
                     //startActivity(new Intent(MainNavigationActivity.this, NewAnnouncementActivity.class));
                     return true;
                 case R.id.navigation_add_new:
+                   /* for(Fragment fragment:getSupportFragmentManager().getFragments()){
+
+                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                    }*/
                     startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
                     //replaceFragment(addNewPetitionFragment);
+                    //animateToFragment(addNewPetitionFragment, "addNewPetitionFragment");
                     return true;
 //                default:
 //                    return false;
@@ -96,43 +111,25 @@ public class MainNavigationActivity extends BaseActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
-        initializeFragments();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        initializeFragments();
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         //BottomNavigationViewHelper.disableShiftMode(navigation);
+        //navigation.getMenu().findItem(R.id.navigation_petitions).setChecked(true);
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void initializeFragments() {
-        //initializeFragments
-        petitionsFragment = new PetitionsFragment();
-        newsFragment = new NewsFragment();
-        addNewPetitionFragment = new AddNewPetitionFragment();
-        victoriesFragment = new VictoriesFragment();
-        profileFragment = new ProfileFragment();
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        fragmentTransaction.add(R.id.mainContainer, petitionsFragment,"petitionsFragment");
-        fragmentTransaction.add(R.id.mainContainer, newsFragment,"newsFragment");
-        fragmentTransaction.add(R.id.mainContainer, addNewPetitionFragment, "addNewPetitionFragment");
-        fragmentTransaction.add(R.id.mainContainer, victoriesFragment, "victoriesFragment");
-        fragmentTransaction.add(R.id.mainContainer, profileFragment, "profileFragment");
-
-        fragmentTransaction.hide(newsFragment);
-        fragmentTransaction.hide(addNewPetitionFragment);
-        fragmentTransaction.hide(victoriesFragment);
-        fragmentTransaction.hide(profileFragment);
-
-
-        fragmentTransaction.commit();
-    }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser==null){
@@ -153,10 +150,87 @@ public class MainNavigationActivity extends BaseActivity {
 
     }
 
+
+    public Fragment getVisibleFragment(){
+        FragmentManager fragmentManager = MainNavigationActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            for(Fragment fragment : fragments){
+                if(fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        //replaceFragment(petitionsFragment);
+
+        Fragment fragment = getVisibleFragment();
+        if (fragment!=null){
+            switch (fragment.getTag()){
+                case "petitionsFragment":
+                    //Toast.makeText(this, "petitionsFragment", Toast.LENGTH_SHORT).show();
+                    navigation.getMenu().findItem(R.id.navigation_petitions).setChecked(true);
+
+                    break;
+                case "newsFragment":
+                    Toast.makeText(this, "newsFragment", Toast.LENGTH_SHORT).show();
+                    navigation.getMenu().findItem(R.id.navigation_news).setChecked(true);
+
+                    break;
+                case "addNewPetitionFragment":
+                    //Toast.makeText(this, "addNewPetitionFragment", Toast.LENGTH_SHORT).show();
+                    navigation.getMenu().findItem(R.id.navigation_add_new).setChecked(true);
+
+                    break;
+                case "victoriesFragment":
+                    //Toast.makeText(this, "victoriesFragment", Toast.LENGTH_SHORT).show();
+                    navigation.getMenu().findItem(R.id.navigation_victories).setChecked(true);
+
+                    break;
+                case "profileFragment":
+                    //Toast.makeText(this, "profileFragment", Toast.LENGTH_SHORT).show();
+                    navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);
+
+                    break;
+
+
+
+            }
+
+        }
+
+    }
+
+    private void initializeFragments() {
+        //initializeFragments
+        petitionsFragment = new PetitionsFragment();
+        newsFragment = new NewsFragment();
+        addNewPetitionFragment = new AddNewPetitionFragment();
+        victoriesFragment = new VictoriesFragment();
+        profileFragment = new ProfileFragment();
+        //animateToFragment(petitionsFragment,"petitionsFragment");
+
+
+        //animateToFragment(petitionsFragment,"petitionsFragment");
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        fragmentTransaction.add(R.id.mainContainer, petitionsFragment,"petitionsFragment");
+        fragmentTransaction.add(R.id.mainContainer, newsFragment,"newsFragment");
+        fragmentTransaction.add(R.id.mainContainer, addNewPetitionFragment, "addNewPetitionFragment");
+        fragmentTransaction.add(R.id.mainContainer, victoriesFragment, "victoriesFragment");
+        fragmentTransaction.add(R.id.mainContainer, profileFragment, "profileFragment");
+
+        fragmentTransaction.hide(newsFragment);
+        fragmentTransaction.hide(addNewPetitionFragment);
+        fragmentTransaction.hide(victoriesFragment);
+        fragmentTransaction.hide(profileFragment);
+
+
+        fragmentTransaction.commit();
     }
 
     private void retrieveFromFirestore(FirebaseUser currentUser) {
@@ -221,40 +295,12 @@ public class MainNavigationActivity extends BaseActivity {
 
     public void replaceFragment(Fragment fragment, Fragment currentFragment){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-         if (fragment == petitionsFragment){
-             fragmentTransaction.hide(addNewPetitionFragment);
-             fragmentTransaction.hide(newsFragment);
-             fragmentTransaction.hide(profileFragment);
-             fragmentTransaction.hide(victoriesFragment);
-         }
 
-        if (fragment == addNewPetitionFragment ){
-            fragmentTransaction.hide(petitionsFragment);
-            fragmentTransaction.hide(newsFragment);
-            fragmentTransaction.hide(profileFragment);
-            fragmentTransaction.hide(victoriesFragment);
-        }
-
-        if (fragment == newsFragment){
-            fragmentTransaction.hide(addNewPetitionFragment);
-            fragmentTransaction.hide( petitionsFragment);
-            fragmentTransaction.hide(profileFragment);
-            fragmentTransaction.hide(victoriesFragment);
-        }
-
-        if (fragment == profileFragment){
-            fragmentTransaction.hide(addNewPetitionFragment);
-            fragmentTransaction.hide(newsFragment);
-            fragmentTransaction.hide( petitionsFragment);
-            fragmentTransaction.hide(victoriesFragment);
-        }
-
-        if (fragment == victoriesFragment){
-            fragmentTransaction.hide(addNewPetitionFragment);
-            fragmentTransaction.hide(newsFragment);
-            fragmentTransaction.hide(profileFragment);
-            fragmentTransaction.hide( petitionsFragment);
-        }
+        fragmentTransaction.hide(petitionsFragment);
+        fragmentTransaction.hide(newsFragment);
+        fragmentTransaction.hide(addNewPetitionFragment);
+        fragmentTransaction.hide(victoriesFragment);
+        fragmentTransaction.hide(profileFragment);
 
         //fragmentTransaction.replace(R.id.mainContainer,fragment);
         fragmentTransaction.show(fragment);
@@ -263,11 +309,13 @@ public class MainNavigationActivity extends BaseActivity {
     }
 
 
+    /*
     private void animateToFragment(Fragment newFragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainContainer, newFragment, tag);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.show(newFragment);
 
         if (newFragment == petitionsFragment){
             fragmentTransaction.hide(addNewPetitionFragment);
@@ -304,7 +352,6 @@ public class MainNavigationActivity extends BaseActivity {
             fragmentTransaction.hide( petitionsFragment);
         }
 
-        fragmentTransaction.show(newFragment);
         fragmentTransaction.commit();
 
     }
@@ -329,7 +376,7 @@ public class MainNavigationActivity extends BaseActivity {
         if (fragment!=null){
             switch (fragment.getTag()){
                 case "petitionsFragment":
-                    Toast.makeText(this, "petitionsFragment", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "petitionsFragment", Toast.LENGTH_SHORT).show();
                     navigation.getMenu().findItem(R.id.navigation_petitions).setChecked(true);
 
                     break;
@@ -339,17 +386,17 @@ public class MainNavigationActivity extends BaseActivity {
 
                     break;
                 case "addNewPetitionFragment":
-                    Toast.makeText(this, "addNewPetitionFragment", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "addNewPetitionFragment", Toast.LENGTH_SHORT).show();
                     navigation.getMenu().findItem(R.id.navigation_add_new).setChecked(true);
 
                     break;
                 case "victoriesFragment":
-                    Toast.makeText(this, "victoriesFragment", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "victoriesFragment", Toast.LENGTH_SHORT).show();
                     navigation.getMenu().findItem(R.id.navigation_victories).setChecked(true);
 
                     break;
                 case "profileFragment":
-                    Toast.makeText(this, "profileFragment", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "profileFragment", Toast.LENGTH_SHORT).show();
                     navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);
 
                     break;
@@ -358,7 +405,9 @@ public class MainNavigationActivity extends BaseActivity {
 
             }
 
+        }else{
+            finish();
         }
 
-    }
+    }*/
 }

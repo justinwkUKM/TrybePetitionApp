@@ -79,7 +79,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
         this.imageViewPetitionCover = (ImageView) findViewById(R.id.imageViewPetitionCover);
         this.newPetitionToolbar = (Toolbar) findViewById(R.id.newPetitionToolbar);
         this.progressBar = findViewById(R.id.newPetitionProgressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         this.btAddPetition = findViewById(R.id.btnAddPetition);
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
