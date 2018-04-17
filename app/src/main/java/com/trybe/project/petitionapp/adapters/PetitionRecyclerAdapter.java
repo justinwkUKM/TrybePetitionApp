@@ -74,9 +74,9 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
         //holder.setIsRecyclable(false);
 
-        final String   stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id, start_date, end_date;
+        final String stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id, start_date, end_date;
         final String[] user_profile_image = new String[1];
-        final String  stCurrentUserId, stPetitionPostId;
+        final String stCurrentUserId, stPetitionPostId;
         if (petitionModels != null) {
             //long milliSeconds = announcementModels.get(position).getPetition_timestamp().getTime();
             //String dateString = DateFormat.format("dd/MM/yyyy", new Date(milliSeconds)).toString();
@@ -136,23 +136,24 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                         if (!queryDocumentSnapshots.isEmpty()) {
 
 
-
-
                             holder.supportersProgressBar.setMax(totalSupporters);
                             int size = queryDocumentSnapshots.size();
-                            if (size==totalSupporters){
+                            if (size > totalSupporters-1) {
                                 //TODO:Fix This
-                                //saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
+                                saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
                             }
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
 
                         } else {
                             holder.supportersProgressBar.setMax(totalSupporters);
-                            int size = 0;
+                            int size = queryDocumentSnapshots.size();
+                            if (size<totalSupporters){
+                                delFromFirebase(stPetitionPostId,"Victories");
+                            }
+                            size = 0;
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
-                            //Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -217,7 +218,8 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                     });
 
                                 } else {
-                                    firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
+                                    delFromFirebase(stCurrentUserId, "Petitions/" + stPetitionPostId + "/Signatures");
+                                    //firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
                                     holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
                                     holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
                                     holder.btSignPetition.setText("Unsigned!");
@@ -237,9 +239,9 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             holder.btCreateAnnouncement.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (stPetitionPostId.isEmpty()||stPetitionPostId == null){
+                    if (stPetitionPostId.isEmpty() || stPetitionPostId == null) {
                         Log.w(TAG, stPetitionPostId);
-                    }else {
+                    } else {
                         Intent i = new Intent(mContext, NewAnnouncementActivity.class);
                         Log.w(TAG, stPetitionPostId);
                         i.putExtra("stPetitionPostId", stPetitionPostId);
@@ -249,6 +251,10 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                 }
             });
         }
+    }
+
+    private void delFromFirebase(String stPetitionPostId, String path) {
+        firebaseFirestore.collection(path).document(stPetitionPostId).delete();
     }
 
     @Override
@@ -278,33 +284,54 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
         }
     }
 
-    private void saveToFirestore(Uri parse, String thumb_url, String user_id, String stPetitionTitle, String stPetitionDesc, String stPetitionSupporters, String stPetitionPostId, String start_date, String end_date) {
-        Map<String, Object> petitionMap = new HashMap<>();
-        petitionMap.put("v_petition_cover_image_url", parse.toString());
-        petitionMap.put("v_petition_cover_image_thumb_url", thumb_url);
-        petitionMap.put("v_petition_title", stPetitionTitle);
-        petitionMap.put("v_petition_desc", stPetitionDesc);
-        petitionMap.put("v_petition_target_supporters", stPetitionSupporters);
-        petitionMap.put("v_petition_petition_post_id", stPetitionPostId);
-        petitionMap.put("v_petition_start_date", start_date);
-        petitionMap.put("v_petition_timestamp", FieldValue.serverTimestamp());
-        petitionMap.put("v_petition_end_date", end_date);
-        petitionMap.put("v_user_id", user_id);
+    private void saveToFirestore(Uri parse, String thumb_url, String user_id, String stPetitionTitle, String stPetitionDesc, String stPetitionSupporters, final String stPetitionPostId, String start_date, String end_date) {
+        final Map<String, Object> petitionMap = new HashMap<>();
+        petitionMap.put("petition_cover_image_url", parse.toString());
+        petitionMap.put("petition_cover_image_thumb_url", thumb_url);
+        petitionMap.put("petition_title", stPetitionTitle);
+        petitionMap.put("petition_desc", stPetitionDesc);
+        petitionMap.put("petition_target_supporters", stPetitionSupporters);
+        petitionMap.put("petition_petition_post_id", stPetitionPostId);
+        petitionMap.put("petition_start_date", start_date);
+        petitionMap.put("petition_timestamp", FieldValue.serverTimestamp());
+        petitionMap.put("petition_end_date", end_date);
+        petitionMap.put("petition_author", user_id);
 
-        firebaseFirestore.collection("Victories").add(petitionMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        firebaseFirestore.collection("Victories").document(stPetitionPostId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
+                    if (task.getResult().exists()) {
+                        Log.e(TAG, "exists");
+
+
+                    } else {
+                        Log.e(TAG, "x exists");
+
+                        firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
+                                addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            String error = task.getException().getMessage();
+                                            Log.e(TAG, error);
+                                            Toast.makeText(mContext, "v_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+
+                    }
+
                 } else {
                     String error = task.getException().getMessage();
                     Log.e(TAG, error);
-                    Toast.makeText(mContext, "v_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
+
 
     }
 }

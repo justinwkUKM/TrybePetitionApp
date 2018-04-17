@@ -87,7 +87,7 @@ public class VictoriesFragment extends Fragment {
             });
 
             Query firstQuery = firebaseFirestore.collection("Victories").
-                    orderBy("v_petition_timestamp", Query.Direction.DESCENDING).limit(LIMIT);
+                    orderBy("petition_timestamp", Query.Direction.DESCENDING).limit(LIMIT);
 
             //added getActivity as first parameter to bind this functionality to the lifecycle of the Activity
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -114,12 +114,16 @@ public class VictoriesFragment extends Fragment {
                                 } else {
 
                                 }
+                                checkForEmptyView();
                             }
                             isFirstPageFirstLoad = false;
                         } else {
+                        petitionModelList.clear();
+                        checkForEmptyView();
                         }
 
                     } else {
+
                     }
                     checkForEmptyView();
                 }
@@ -163,6 +167,7 @@ public class VictoriesFragment extends Fragment {
             }
         });
     }
+
 
     private void checkForEmptyView() {
         if (petitionRecyclerAdapter.getItemCount() == 0) {
