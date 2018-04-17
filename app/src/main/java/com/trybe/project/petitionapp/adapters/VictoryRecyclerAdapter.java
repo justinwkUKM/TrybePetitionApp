@@ -22,7 +22,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -31,14 +30,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.trybe.project.petitionapp.R;
 import com.trybe.project.petitionapp.models.PetitionModel;
-import com.trybe.project.petitionapp.views.activities.MainNavigationActivity;
+import com.trybe.project.petitionapp.models.VictoryModel;
 import com.trybe.project.petitionapp.views.activities.NewAnnouncementActivity;
-import com.trybe.project.petitionapp.views.activities.NewPetitionActivity;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,17 +43,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by MyXLab on 29/3/2018.
  */
 
-public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecyclerAdapter.ViewHolder> {
+public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecyclerAdapter.ViewHolder> {
 
-    private static final String TAG = PetitionRecyclerAdapter.class.getSimpleName();
-    public List<PetitionModel> petitionModels;
+    private static final String TAG = VictoryRecyclerAdapter.class.getSimpleName();
+    public List<VictoryModel> victoryModelList;
     private Context mContext;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
 
-    public PetitionRecyclerAdapter(List<PetitionModel> petitionModelList, Activity context) {
-        this.petitionModels = petitionModelList;
+    public VictoryRecyclerAdapter(List<VictoryModel> victoryModelList, Activity context) {
+        this.victoryModelList = victoryModelList;
         this.mContext = context;
     }
 
@@ -77,39 +74,44 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
         final String stPetitionTitle, stPetitionDesc, stPetitionSupporters, image_url, thumb_url, user_id, start_date, end_date;
         final String[] user_profile_image = new String[1];
         final String stCurrentUserId, stPetitionPostId;
-        if (petitionModels != null) {
+        if (victoryModelList != null) {
             //long milliSeconds = announcementModels.get(position).getPetition_timestamp().getTime();
             //String dateString = DateFormat.format("dd/MM/yyyy", new Date(milliSeconds)).toString();
             //Log.w(TAG, dateString);
             stCurrentUserId = firebaseAuth.getCurrentUser().getUid();
-            stPetitionPostId = petitionModels.get(position).PetitionPostId;
-            stPetitionTitle = petitionModels.get(position).getPetition_title();
-            stPetitionDesc = petitionModels.get(position).getPetition_desc();
-            stPetitionSupporters = petitionModels.get(position).getPetition_target_supporters();
-            image_url = petitionModels.get(position).getPetition_cover_image_url();
-            thumb_url = petitionModels.get(position).getPetition_cover_image_thumb_url();
-            start_date = petitionModels.get(position).getPetition_start_date();
-            end_date = petitionModels.get(position).getPetition_stop_date();
+            stPetitionPostId = victoryModelList.get(position).PetitionPostId;
+            stPetitionTitle = victoryModelList.get(position).getPetition_title();
+            stPetitionDesc = victoryModelList.get(position).getPetition_desc();
+            stPetitionSupporters = victoryModelList.get(position).getPetition_target_supporters();
+            image_url = victoryModelList.get(position).getPetition_cover_image_url();
+            thumb_url = victoryModelList.get(position).getPetition_cover_image_thumb_url();
+            start_date = victoryModelList.get(position).getPetition_start_date();
+            end_date = victoryModelList.get(position).getPetition_stop_date();
 
 
             holder.tvPetitionTitle.setText(stPetitionTitle);
             holder.tvPetitionDesc.setText(stPetitionDesc);
 
-            final int progress = 0;
             final int totalSupporters = Integer.parseInt(stPetitionSupporters);
             holder.supportersProgressBar.setMax(totalSupporters);
-            holder.supportersProgressBar.setProgress(progress);
-            holder.tvPetitionSupporters.setText(progress + " of " + stPetitionSupporters + " have signed!");
+            holder.supportersProgressBar.setProgress(totalSupporters);
+            int supporters = Integer.parseInt(stPetitionSupporters);
+            if (supporters==1){
+                holder.tvPetitionSupporters.setText(stPetitionSupporters + " supporter have signed this petition!");
+            }else{
+                holder.tvPetitionSupporters.setText(stPetitionSupporters + " supporters have signed this petition!");
+            }
             holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
             holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
             holder.btSignPetition.setText("Unsigned!");
+            holder.btSignPetition.setVisibility(View.GONE);
 
 
             final RequestOptions placeHolderRequest = new RequestOptions();
             placeHolderRequest.placeholder(R.drawable.com_facebook_profile_picture_blank_square);
             Glide.with(mContext).setDefaultRequestOptions(placeHolderRequest).load(image_url).thumbnail(Glide.with(mContext).load(thumb_url)).into(holder.petionCoverImageView);
 
-            user_id = petitionModels.get(position).getPetition_author();
+            user_id = victoryModelList.get(position).getPetition_author();
             firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
                 @Override
@@ -128,7 +130,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                 }
             });
 
-            //Signed petitions support count
+           /* //Signed petitions support count
             firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -138,7 +140,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
                             holder.supportersProgressBar.setMax(totalSupporters);
                             int size = queryDocumentSnapshots.size();
-                            if (size > totalSupporters-1) {
+                            if (size == totalSupporters) {
                                 //TODO:Fix This
                                 saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
                             }
@@ -147,13 +149,10 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
                         } else {
                             holder.supportersProgressBar.setMax(totalSupporters);
-                            int size = queryDocumentSnapshots.size();
-                            if (size<totalSupporters){
-                                delFromFirebase(stPetitionPostId,"Victories");
-                            }
-                            size = 0;
+                            int size = 0;
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
+                            //Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -218,8 +217,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                     });
 
                                 } else {
-                                    delFromFirebase(stCurrentUserId, "Petitions/" + stPetitionPostId + "/Signatures");
-                                    //firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
+                                    firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
                                     holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
                                     holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
                                     holder.btSignPetition.setText("Unsigned!");
@@ -249,17 +247,13 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                     }
 
                 }
-            });
+            });*/
         }
-    }
-
-    private void delFromFirebase(String stPetitionPostId, String path) {
-        firebaseFirestore.collection(path).document(stPetitionPostId).delete();
     }
 
     @Override
     public int getItemCount() {
-        return petitionModels.size();
+        return victoryModelList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -281,11 +275,12 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             btSignPetition = itemView.findViewById(R.id.btSignPetition);
             profileImage = itemView.findViewById(R.id.profile_image_petitions);
             btCreateAnnouncement = itemView.findViewById(R.id.btCreateAnnouncement);
+            btCreateAnnouncement.setVisibility(View.GONE);
         }
     }
 
-    private void saveToFirestore(Uri parse, String thumb_url, String user_id, String stPetitionTitle, String stPetitionDesc, String stPetitionSupporters, final String stPetitionPostId, String start_date, String end_date) {
-        final Map<String, Object> petitionMap = new HashMap<>();
+    private void saveToFirestore(Uri parse, String thumb_url, String user_id, String stPetitionTitle, String stPetitionDesc, String stPetitionSupporters, String stPetitionPostId, String start_date, String end_date) {
+        Map<String, Object> petitionMap = new HashMap<>();
         petitionMap.put("victory_petition_cover_image_url", parse.toString());
         petitionMap.put("victory_petition_cover_image_thumb_url", thumb_url);
         petitionMap.put("victory_petition_title", stPetitionTitle);
@@ -297,40 +292,21 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
         petitionMap.put("victory_petition_stop_date", end_date);
         petitionMap.put("victory_petition_author", user_id);
 
-        firebaseFirestore.collection("Victories").document(stPetitionPostId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().exists()) {
-                        Log.e(TAG, "exists");
 
 
-                    } else {
-                        Log.e(TAG, "x exists");
-
-                        firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
-                                addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            String error = task.getException().getMessage();
-                                            Log.e(TAG, error);
-                                            Toast.makeText(mContext, "v_victory_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-
-
+        firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
+                addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String error = task.getException().getMessage();
+                            Log.e(TAG, error);
+                            Toast.makeText(mContext, "v_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
+                        }
                     }
-
-                } else {
-                    String error = task.getException().getMessage();
-                    Log.e(TAG, error);
-                }
-            }
-        });
+                });
 
 
     }

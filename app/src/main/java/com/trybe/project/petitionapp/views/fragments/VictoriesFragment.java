@@ -23,7 +23,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.trybe.project.petitionapp.R;
 import com.trybe.project.petitionapp.adapters.PetitionRecyclerAdapter;
+import com.trybe.project.petitionapp.adapters.VictoryRecyclerAdapter;
 import com.trybe.project.petitionapp.models.PetitionModel;
+import com.trybe.project.petitionapp.models.VictoryModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +42,9 @@ public class VictoriesFragment extends Fragment {
 
     public static final int LIMIT = 7;
     private RecyclerView petitionsListView;
-    private PetitionRecyclerAdapter petitionRecyclerAdapter;
+    private VictoryRecyclerAdapter victoryRecyclerAdapter;
 
-    private List<PetitionModel> petitionModelList;
+    private List<VictoryModel> victoryModelList;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
@@ -60,14 +62,14 @@ public class VictoriesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_victories, container, false);
         this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
         this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
-        petitionModelList = new ArrayList<>();
+        victoryModelList = new ArrayList<>();
         petitionsListView = view.findViewById(R.id.myPetitionsRecyclerView);
-        petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
+        victoryRecyclerAdapter = new VictoryRecyclerAdapter(victoryModelList, getActivity());
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         petitionsListView.setLayoutManager(mLayoutManager);
 
-        petitionsListView.setAdapter(petitionRecyclerAdapter);
+        petitionsListView.setAdapter(victoryRecyclerAdapter);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -87,7 +89,7 @@ public class VictoriesFragment extends Fragment {
             });
 
             Query firstQuery = firebaseFirestore.collection("Victories").
-                    orderBy("petition_timestamp", Query.Direction.DESCENDING).limit(LIMIT);
+                    orderBy("victory_petition_timestamp", Query.Direction.DESCENDING).limit(LIMIT);
 
             //added getActivity as first parameter to bind this functionality to the lifecycle of the Activity
             firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
@@ -102,14 +104,27 @@ public class VictoriesFragment extends Fragment {
                             for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                 if (doc.getType() == DocumentChange.Type.ADDED) {
                                     String petitionPostId = doc.getDocument().getId();
-                                    PetitionModel petitionModel = doc.getDocument().toObject(PetitionModel.class).withId(petitionPostId);
+
+                                    VictoryModel victoryModel = new VictoryModel();
+
+                                    victoryModel.setPetition_author(doc.getDocument().getString("victory_petition_author"));
+                                    victoryModel.setPetition_cover_image_url(doc.getDocument().getString("victory_petition_cover_image_url"));
+                                    victoryModel.setPetition_cover_image_thumb_url(doc.getDocument().getString("victory_petition_cover_image_thumb_url"));
+                                    victoryModel.setPetition_title(doc.getDocument().getString("victory_petition_title"));
+                                    victoryModel.setPetition_desc(doc.getDocument().getString("victory_petition_desc"));
+                                    victoryModel.setPetition_target_supporters(doc.getDocument().getString("victory_petition_target_supporters"));
+                                    victoryModel.setPetition_start_date(doc.getDocument().getString("victory_petition_start_date"));
+                                    victoryModel.setPetition_stop_date(doc.getDocument().getString("victory_petition_stop_date"));
+                                    victoryModel.setPetition_timestamp(doc.getDocument().getDate("victory_petition_timestamp"));
+
+
                                     if (isFirstPageFirstLoad) {
-                                        petitionModelList.add(petitionModel);
+                                        victoryModelList.add(victoryModel);
                                     } else {
-                                        petitionModelList.add(0, petitionModel);
+                                        victoryModelList.add(0, victoryModel);
                                     }
 
-                                    petitionRecyclerAdapter.notifyDataSetChanged();
+                                    victoryRecyclerAdapter.notifyDataSetChanged();
 
                                 } else {
 
@@ -118,7 +133,7 @@ public class VictoriesFragment extends Fragment {
                             }
                             isFirstPageFirstLoad = false;
                         } else {
-                        petitionModelList.clear();
+                        victoryModelList.clear();
                         checkForEmptyView();
                         }
 
@@ -136,7 +151,7 @@ public class VictoriesFragment extends Fragment {
 
     public void loadMorePetitions() {
         Query nextQuery = firebaseFirestore.collection("Victories")
-                .orderBy("petition_timestamp", Query.Direction.DESCENDING)
+                .orderBy("victory_petition_timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible)
                 .limit(LIMIT);
 
@@ -149,10 +164,10 @@ public class VictoriesFragment extends Fragment {
                         for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 String petitionPostId = doc.getDocument().getId();
-                                PetitionModel petitionModel = doc.getDocument().toObject(PetitionModel.class).withId(petitionPostId);
+                                VictoryModel victoryModel = doc.getDocument().toObject(VictoryModel.class).withId(petitionPostId);
 
-                                petitionModelList.add(petitionModel);
-                                petitionRecyclerAdapter.notifyDataSetChanged();
+                                victoryModelList.add(victoryModel);
+                                victoryRecyclerAdapter.notifyDataSetChanged();
 
                             } else {
 
@@ -170,8 +185,8 @@ public class VictoriesFragment extends Fragment {
 
 
     private void checkForEmptyView() {
-        if (petitionRecyclerAdapter.getItemCount() == 0) {
-            if (petitionModelList.isEmpty()) {
+        if (victoryRecyclerAdapter.getItemCount() == 0) {
+            if (victoryModelList.isEmpty()) {
                 petitionsListView.setVisibility(View.GONE);
                 layourPlaceHolder.setVisibility(View.VISIBLE);
                 buttonRefresh.setOnClickListener(new View.OnClickListener() {
