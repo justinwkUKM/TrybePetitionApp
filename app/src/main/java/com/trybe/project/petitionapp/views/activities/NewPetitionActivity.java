@@ -115,6 +115,9 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
                     user_id = firebaseAuth.getCurrentUser().getUid();
                     progressBar.setVisibility(View.VISIBLE);
 
+                    //disable the add petition button
+                    btAddPetition.setEnabled(false);
+
                     randomName = UUID.randomUUID().toString();
                     // randomName = random();
 
@@ -156,16 +159,23 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
                                     }
                                 });
 
-
+                                //enable the add petition button
+                                btAddPetition.setEnabled(true);
                             } else {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String error = task.getException().getMessage();
+                                //enable the add petition button
+                                btAddPetition.setEnabled(true);
                             }
+
+
+
                         }
                     });
                 } else {
                     //gotoMain();
                 }
+
             }
         });
 
@@ -194,10 +204,10 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
         if (etStartClicked) {
             etPetitionStartDate.setText(dateFormat.format(cal.getTime()));
-            etStartClicked=false;
+            etStartClicked = false;
         } else if (etStopClicked) {
             etPetitionStopDate.setText(dateFormat.format(cal.getTime()));
-            etStopClicked=false;
+            etStopClicked = false;
         }
     }
 

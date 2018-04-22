@@ -103,7 +103,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
             }
             holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
             holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
-            holder.btSignPetition.setText("Unsigned!");
+            holder.btSignPetition.setText("Sign Now!");
             holder.btSignPetition.setVisibility(View.GONE);
 
 

@@ -1,12 +1,15 @@
 package com.trybe.project.petitionapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by MyXLab on 26/3/2018.
  */
 
-public class PetitionModel extends PetitionPostId {
+public class PetitionModel extends PetitionPostId implements Parcelable {
     private String petition_author, petition_cover_image_url, petition_cover_image_thumb_url,
             petition_title, petition_desc, petition_target_supporters, petition_start_date,
             petition_stop_date;
@@ -108,4 +111,49 @@ public class PetitionModel extends PetitionPostId {
     public void setAnnouncementModel(AnnouncementModel announcementModel) {
         this.announcementModel = announcementModel;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.petition_author);
+        dest.writeString(this.petition_cover_image_url);
+        dest.writeString(this.petition_cover_image_thumb_url);
+        dest.writeString(this.petition_title);
+        dest.writeString(this.petition_desc);
+        dest.writeString(this.petition_target_supporters);
+        dest.writeString(this.petition_start_date);
+        dest.writeString(this.petition_stop_date);
+        dest.writeLong(this.petition_timestamp != null ? this.petition_timestamp.getTime() : -1);
+        //dest.writeParcelable(this.announcementModel, flags);
+    }
+
+    protected PetitionModel(Parcel in) {
+        this.petition_author = in.readString();
+        this.petition_cover_image_url = in.readString();
+        this.petition_cover_image_thumb_url = in.readString();
+        this.petition_title = in.readString();
+        this.petition_desc = in.readString();
+        this.petition_target_supporters = in.readString();
+        this.petition_start_date = in.readString();
+        this.petition_stop_date = in.readString();
+        long tmpPetition_timestamp = in.readLong();
+        this.petition_timestamp = tmpPetition_timestamp == -1 ? null : new Date(tmpPetition_timestamp);
+        //this.announcementModel = in.readParcelable(AnnouncementModel.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<PetitionModel> CREATOR = new Parcelable.Creator<PetitionModel>() {
+        @Override
+        public PetitionModel createFromParcel(Parcel source) {
+            return new PetitionModel(source);
+        }
+
+        @Override
+        public PetitionModel[] newArray(int size) {
+            return new PetitionModel[size];
+        }
+    };
 }

@@ -85,6 +85,10 @@
         <activity android:name=".views.activities.BaseActivity"
             android:screenOrientation="portrait"
             ></activity>
+        <activity android:name=".views.activities.PetitionDetails"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".views.activities.PetitionDetails"
+            ></activity>
         <!--<receiver android:name=".BaseActivity$NetworkChangeReceiver" >-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->

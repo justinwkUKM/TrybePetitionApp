@@ -98,6 +98,9 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                     user_id = firebaseAuth.getCurrentUser().getUid();
                     progressBar.setVisibility(View.VISIBLE);
 
+                    //disable the add petition button
+                    btAddAnnouncement.setEnabled(false);
+
                     randomName = UUID.randomUUID().toString();
                     // randomName = random();
 
@@ -137,13 +140,25 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                                         Log.e(TAG, e.getMessage());
                                     }
                                 });
+
+                                //enable the add petition button
+                                btAddAnnouncement.setEnabled(true);
+
                             } else {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String error = task.getException().getMessage();
                                 Log.e(TAG, error);
+
+                                //enable the add petition button
+                                btAddAnnouncement.setEnabled(true);
                             }
+
+
+
                         }
                     });
+
+
                 } else {
                     //gotoMain();
                 }

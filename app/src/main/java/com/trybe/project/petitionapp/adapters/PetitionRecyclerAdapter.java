@@ -1,12 +1,15 @@
 package com.trybe.project.petitionapp.adapters;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +37,7 @@ import com.trybe.project.petitionapp.models.PetitionModel;
 import com.trybe.project.petitionapp.views.activities.MainNavigationActivity;
 import com.trybe.project.petitionapp.views.activities.NewAnnouncementActivity;
 import com.trybe.project.petitionapp.views.activities.NewPetitionActivity;
+import com.trybe.project.petitionapp.views.activities.PetitionDetails;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,11 +53,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecyclerAdapter.ViewHolder> {
 
     private static final String TAG = PetitionRecyclerAdapter.class.getSimpleName();
-    public List<PetitionModel> petitionModels;
-    private Context mContext;
+    private List<PetitionModel> petitionModels;
+    private Activity mContext;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-
+    private int signatureSize=0;
+    private int announcementSize=0;
+    private String currentUser;
 
     public PetitionRecyclerAdapter(List<PetitionModel> petitionModelList, Activity context) {
         this.petitionModels = petitionModelList;
@@ -66,6 +72,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
         //this.mContext = parent.getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser().getUid();
         return new ViewHolder(view);
     }
 
@@ -102,7 +109,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             holder.tvPetitionSupporters.setText(progress + " of " + stPetitionSupporters + " have signed!");
             holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
             holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
-            holder.btSignPetition.setText("Unsigned!");
+            holder.btSignPetition.setText("Sign Now!");
 
 
             final RequestOptions placeHolderRequest = new RequestOptions();
@@ -129,6 +136,33 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             });
 
             //Signed petitions support count
+            firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Announcements").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                    if (queryDocumentSnapshots != null) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+
+
+
+                            int size = queryDocumentSnapshots.size();
+
+                            announcementSize = size;
+
+
+
+                        } else {
+
+                            int size = queryDocumentSnapshots.size();
+
+                            announcementSize = size;
+
+                        }
+                    }
+
+                }
+            });
+
+            //Signed petitions support count
             firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -138,9 +172,14 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
                             holder.supportersProgressBar.setMax(totalSupporters);
                             int size = queryDocumentSnapshots.size();
+
+                            signatureSize = size;
+
                             if (size > totalSupporters-1) {
                                 //TODO:Fix This
                                 saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
+                            }else {
+                                delFromFirebase(stPetitionPostId,"Victories");
                             }
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
@@ -187,8 +226,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             holder.btSignPetition.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
+                    holder.btSignPetition.setEnabled(false);
                     firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -222,7 +260,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                     //firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Signatures").document(stCurrentUserId).delete();
                                     holder.btSignPetition.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
                                     holder.btSignPetition.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
-                                    holder.btSignPetition.setText("Unsigned!");
+                                    holder.btSignPetition.setText("Sign Now!");
                                     //  Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
                                 }
 
@@ -230,24 +268,66 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                 String error = task.getException().getMessage();
                                 Log.e(TAG, error);
                             }
+
+                            //
+                            holder.btSignPetition.setEnabled(true);
                         }
                     });
 
                 }
             });
 
-            holder.btCreateAnnouncement.setOnClickListener(new View.OnClickListener() {
+                holder.btCreateAnnouncement.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (stPetitionPostId.isEmpty() || stPetitionPostId == null) {
+                            Log.w(TAG, stPetitionPostId);
+                        } else {
+                            Intent i = new Intent(mContext, NewAnnouncementActivity.class);
+                            Log.w(TAG, stPetitionPostId);
+                            i.putExtra("stPetitionPostId", stPetitionPostId);
+                            mContext.startActivity(i);
+                        }
+
+                    }
+                });
+
+
+            if (user_id.equals(currentUser)){
+                holder.btCreateAnnouncement.setVisibility(View.VISIBLE);
+
+            }   else{
+
+                holder.btCreateAnnouncement.setVisibility(View.INVISIBLE);
+
+            }
+
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (stPetitionPostId.isEmpty() || stPetitionPostId == null) {
-                        Log.w(TAG, stPetitionPostId);
-                    } else {
-                        Intent i = new Intent(mContext, NewAnnouncementActivity.class);
-                        Log.w(TAG, stPetitionPostId);
-                        i.putExtra("stPetitionPostId", stPetitionPostId);
-                        mContext.startActivity(i);
-                    }
+                    Intent i = new Intent(mContext.getApplicationContext(), PetitionDetails.class);
 
+                    Pair[] pairs = new Pair[5];
+                    pairs[0] = new Pair<View, String>(holder.profileImage, "userProfileImage");
+                    pairs[1] = new Pair<View, String>(holder.supportersProgressBar, "petitionProgressBar");
+                    pairs[2] = new Pair<View, String>(holder.tvPetitionDesc, "petitionDescription");
+                    pairs[3] = new Pair<View, String>(holder.petionCoverImageView, "petitionCoverImage");
+                    pairs[4] = new Pair<View, String>(holder.btSignPetition, "petitionSignInButton");
+
+                    ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(mContext, pairs);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("announcementSize",announcementSize);
+                    bundle.putInt("signatureSize",signatureSize);
+                    bundle.putString("stPetitionPostId",stPetitionPostId);
+                    bundle.putParcelable("parcel",petitionModels.get(position));
+                    i.putExtras(bundle);
+
+
+
+
+                    mContext.startActivity(i,activityOptions.toBundle());
                 }
             });
         }
@@ -272,7 +352,6 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             tvPetitionTitle = itemView.findViewById(R.id.tvPetitionTitle);
             tvPetitionDesc = itemView.findViewById(R.id.tvPetitionDesc);
             tvPetitionSupporters = itemView.findViewById(R.id.tvNoOfSupporters);
@@ -303,11 +382,8 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
                         Log.e(TAG, "exists");
-
-
                     } else {
                         Log.e(TAG, "x exists");
-
                         firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
                                 addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -321,17 +397,12 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                         }
                                     }
                                 });
-
-
                     }
-
                 } else {
                     String error = task.getException().getMessage();
                     Log.e(TAG, error);
                 }
             }
         });
-
-
     }
 }
