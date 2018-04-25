@@ -47,9 +47,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.trybe.project.petitionapp.views.fragments.PetitionsFragment.LIMIT;
 
 
+
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
+
+
 public class ProfileFragment extends Fragment {
 
 

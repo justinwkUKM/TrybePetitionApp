@@ -47,7 +47,7 @@ import java.util.Random;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by MyXLab on 29/3/2018.
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
 
 public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecyclerAdapter.ViewHolder> {

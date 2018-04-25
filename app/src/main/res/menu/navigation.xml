@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/navigation_petitions"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_discover_grey"
         android:title="@string/title_petitions" />
 
     <item
         android:id="@+id/navigation_news"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_announcement_grey"
         android:title="@string/title_news" />
 
     <item
@@ -20,13 +20,11 @@
 
     <item
         android:id="@+id/navigation_victories"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_victory_grey"
         android:title="@string/title_victories" />
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_person_black_24dp"
+        android:icon="@drawable/ic_profile_grey"
         android:title="@string/title_profile" />
-
-
 
 </menu>

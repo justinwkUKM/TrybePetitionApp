@@ -27,7 +27,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by MyXLab on 30/3/2018.
+ * Created by Waqas Khalid Obeidy on 30/3/2018.
  */
 
 public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<AnnouncementRecyclerAdapter.ViewHolder> {

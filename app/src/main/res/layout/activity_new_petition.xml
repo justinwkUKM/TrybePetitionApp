@@ -19,18 +19,36 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         >
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/newPetitionToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
 
-        </android.support.v7.widget.Toolbar>
+        <RelativeLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/newPetitionToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Account Setup"
+                android:textColor="@color/White"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
         <ProgressBar
             android:id="@+id/newPetitionProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -41,7 +59,7 @@
         <FrameLayout
             android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:background="@color/colorPrimaryDark">
 
             <Button
@@ -61,9 +79,8 @@
         <ImageView
             android:id="@+id/imageViewPetitionCover"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:contentDescription="@string/title_petitions"
-            android:scaleType="centerInside"
             android:background="@color/LightGrey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,6 +119,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/petition_title_desc"
+                            android:singleLine="true"
                             android:maxLength="40"
                             android:textSize="14sp" />
                     </android.support.design.widget.TextInputLayout>
@@ -130,6 +148,7 @@
                             android:id="@+id/etPetitionDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:singleLine="true"
                             android:hint="@string/petition_description_desc"
                             android:maxLength="200"
                             android:textSize="14sp" />
@@ -159,6 +178,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/target_supporters_desc"
+                            android:singleLine="true"
                             android:inputType="number"
                             android:maxLength="10"
                             android:textSize="14sp" />

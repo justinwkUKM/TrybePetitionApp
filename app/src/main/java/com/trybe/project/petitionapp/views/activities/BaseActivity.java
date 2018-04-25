@@ -16,6 +16,11 @@ import android.widget.TextView;
 
 import com.trybe.project.petitionapp.R;
 
+
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
+
 public class BaseActivity extends AppCompatActivity {
 
 

@@ -5,7 +5,8 @@
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_search"
-        app:showAsAction="always"
+        app:showAsAction="never"
+        android:visible="false"
         android:title="@string/title_search" />
 
     <item
@@ -16,6 +17,12 @@
     <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/title_logout" />
+
+    <item
+        android:id="@+id/menu_add"
+        android:icon="@drawable/ic_note_add_24dp"
+        app:showAsAction="always"
         android:title="@string/title_logout" />
 
 </menu>

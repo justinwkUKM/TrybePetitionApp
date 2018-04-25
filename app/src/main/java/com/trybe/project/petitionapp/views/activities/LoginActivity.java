@@ -38,6 +38,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
 public class LoginActivity extends BaseActivity {
 
     public static final String TAG = "FacebookVal";

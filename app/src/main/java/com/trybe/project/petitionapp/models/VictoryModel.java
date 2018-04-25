@@ -3,7 +3,7 @@ package com.trybe.project.petitionapp.models;
 import java.util.Date;
 
 /**
- * Created by MyXLab on 26/3/2018.
+ * Created by Waqas Khalid Obeidy on 26/3/2018.
  */
 
 public class VictoryModel extends PetitionPostId {

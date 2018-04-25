@@ -53,9 +53,11 @@ import id.zelory.compressor.Compressor;
 import static android.app.Activity.RESULT_OK;
 
 
+
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
+
 public class AddNewPetitionFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
 
@@ -251,9 +253,7 @@ public class AddNewPetitionFragment extends Fragment implements DatePickerDialog
     private void bringImagePicker() {
         // start picker to get image for cropping and then use the image in cropping activity
         CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMinCropResultSize(512, 512)
-                .setAspectRatio(1, 1)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(getActivity());
     }
 

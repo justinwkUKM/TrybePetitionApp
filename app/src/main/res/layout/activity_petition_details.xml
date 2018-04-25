@@ -33,7 +33,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:transitionName="petitionCoverImage"
-
                     android:scaleType="centerCrop"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
@@ -44,8 +43,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|snap"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -74,8 +72,9 @@
                     android:id="@+id/tvHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="Details"
+                    android:paddingLeft="10dp"
                     android:transitionName="petitionTitle"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -113,7 +112,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:transitionName="petitionDescription"
-
                     android:layout_marginTop="8dp"
                     android:text="The Tribe Warriors is an equal human rights awareness project initiated by the great heart that aims to safeguard the cleanliness of our environment" />
 

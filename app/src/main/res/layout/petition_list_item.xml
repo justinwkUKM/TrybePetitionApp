@@ -53,7 +53,6 @@
                 android:layout_marginTop="8dp"
                 android:text="TextView"
                 android:transitionName="petitionDescription"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPetitionTitle" />
 
@@ -85,7 +84,6 @@
                 android:id="@+id/btSignPetition"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -105,7 +103,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:transitionName="userProfileImage"
-
                 android:src="@drawable/com_facebook_profile_picture_blank_square"
                 app:civ_border_color="@color/colorAccent"
                 app:civ_border_width="1dp"

@@ -21,8 +21,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.trybe.project.petitionapp.R;
 import com.trybe.project.petitionapp.models.PetitionModel;
 
+import java.util.Random;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Created by Waqas Khalid Obeidy on 18/4/2018.
+ */
 public class PetitionDetails extends BaseActivity {
 
     private static final String TAG = PetitionDetails.class.getSimpleName();
@@ -88,8 +93,12 @@ public class PetitionDetails extends BaseActivity {
         tvHeader.setText(petitionModel.getPetition_title());
         tvPetitionDesc.setText(petitionModel.getPetition_desc());
         tvNoOfSignatures.setText(signatureSize +"\nof "+petitionModel.getPetition_target_supporters()+" Signatures");
-        tvNoOfTotalShares.setText(signatureSize +"\nof "+petitionModel.getPetition_target_supporters()+" Signatures");
-        tvNoOfDaysLeft.setText("42 \nDays Left");
+        tvNoOfTotalShares.setText(signatureSize +" Shares");
+
+        Random ran = new Random();
+        int x = ran.nextInt(9) + 12;
+
+        tvNoOfDaysLeft.setText(x+"\nDays Left");
         tvNoOfSupporters.setText(""+signatureSize);
         tvNoOfAnnouncements.setText(""+announcementSize);
         progressBarSupportersCount.setMax(signatureSize);

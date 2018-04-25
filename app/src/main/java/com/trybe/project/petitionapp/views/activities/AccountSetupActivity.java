@@ -48,6 +48,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
+
 public class AccountSetupActivity extends AppCompatActivity {
 
     public static final String TAG = "AccountSetupActivity";
@@ -75,7 +79,7 @@ public class AccountSetupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_setup);
         Toolbar toolbar = findViewById(R.id.setupAccountActivityToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Account Settings");
+        getSupportActionBar().setTitle("");
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();

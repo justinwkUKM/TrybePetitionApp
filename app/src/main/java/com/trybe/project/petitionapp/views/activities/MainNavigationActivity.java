@@ -35,6 +35,9 @@ import com.trybe.project.petitionapp.views.fragments.VictoriesFragment;
 
 import java.util.List;
 
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
 public class MainNavigationActivity extends BaseActivity {
 
     private final String TAG = MainNavigationActivity.class.getSimpleName().toString();
@@ -82,12 +85,12 @@ public class MainNavigationActivity extends BaseActivity {
 
                         getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                     }*/
-                    startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
+
+                   //startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
+
                     //replaceFragment(addNewPetitionFragment);
                     //animateToFragment(addNewPetitionFragment, "addNewPetitionFragment");
                     return true;
-//                default:
-//                    return false;
             }
             return false;
         }
@@ -100,7 +103,7 @@ public class MainNavigationActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.mainActivityToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Cohort");
+        getSupportActionBar().setTitle("");
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -275,6 +278,10 @@ public class MainNavigationActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.menu_search:
                 // Action goes here
+                return true;
+            case R.id.menu_add:
+                // Action goes here
+                startActivity(new Intent(MainNavigationActivity.this, NewPetitionActivity.class));
                 return true;
             case R.id.menu_account_settings:
                 // Action goes here

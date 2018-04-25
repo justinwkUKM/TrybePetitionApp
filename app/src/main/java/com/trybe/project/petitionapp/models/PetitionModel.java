@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.Date;
 
 /**
- * Created by MyXLab on 26/3/2018.
+ * Created by Waqas Khalid Obeidy on 26/3/2018.
  */
 
 public class PetitionModel extends PetitionPostId implements Parcelable {

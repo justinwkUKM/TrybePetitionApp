@@ -46,6 +46,9 @@ import java.util.UUID;
 
 import id.zelory.compressor.Compressor;
 
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
 public class NewPetitionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String TAG = NewPetitionActivity.class.getSimpleName();
@@ -88,7 +91,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
 
 
         setSupportActionBar(newPetitionToolbar);
-        getSupportActionBar().setTitle("New Petition");
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageViewPetitionCover.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +255,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMinCropResultSize(512, 512)
-                .setAspectRatio(1, 1)
+                .setAspectRatio(2, 1)
                 .start(NewPetitionActivity.this);
     }
 
@@ -263,6 +266,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
             if (resultCode == RESULT_OK) {
                 petitionCoverImageUri = result.getUri();
                 imageViewPetitionCover.setImageURI(petitionCoverImageUri);
+                imageViewPetitionCover.setScaleType(ImageView.ScaleType.FIT_XY);
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 

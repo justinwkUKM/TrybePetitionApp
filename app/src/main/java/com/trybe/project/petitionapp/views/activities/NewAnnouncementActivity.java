@@ -40,6 +40,9 @@ import java.util.UUID;
 
 import id.zelory.compressor.Compressor;
 
+/**
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
+ */
 public class NewAnnouncementActivity extends AppCompatActivity {
 
     public static final String TAG = NewAnnouncementActivity.class.getSimpleName();
@@ -68,7 +71,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
         this.imageViewAnnouncementCover = (ImageView) findViewById(R.id.imageViewAnnouncementCover);
         this.newAnnouncementToolbar = (Toolbar) findViewById(R.id.newAnnouncementToolbar);
         this.progressBar = findViewById(R.id.newAnnouncementProgressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         this.btAddAnnouncement = findViewById(R.id.btnAddAnnouncement);
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -77,7 +80,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
 
 
         setSupportActionBar(newAnnouncementToolbar);
-        getSupportActionBar().setTitle("New Announcement");
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageViewAnnouncementCover.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +205,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMinCropResultSize(512, 512)
-                .setAspectRatio(1, 1)
+                .setAspectRatio(2, 1)
                 .start(NewAnnouncementActivity.this);
     }
 
@@ -213,6 +216,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 announcementCoverImageUri = result.getUri();
                 imageViewAnnouncementCover.setImageURI(announcementCoverImageUri);
+                imageViewAnnouncementCover.setScaleType(ImageView.ScaleType.FIT_XY);
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 

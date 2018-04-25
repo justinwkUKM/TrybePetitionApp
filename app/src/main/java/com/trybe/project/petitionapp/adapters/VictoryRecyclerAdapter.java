@@ -40,7 +40,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by MyXLab on 29/3/2018.
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
 
 public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecyclerAdapter.ViewHolder> {

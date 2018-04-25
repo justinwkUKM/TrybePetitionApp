@@ -32,8 +32,11 @@ import java.util.List;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
+
+
+
 public class VictoriesFragment extends Fragment {
 
 
