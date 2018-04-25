@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true"
-    android:id="@+id/coordinator">
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -16,11 +16,10 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="#2e87e1"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:background="@color/colorAccent"
-            >
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentScrim="#2e87e1"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <!-- You can add views that you want to appear on the
                  collapsing toolbar here -->
@@ -32,8 +31,8 @@
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:transitionName="petitionCoverImage"
                     android:scaleType="centerCrop"
+                    android:transitionName="petitionCoverImage"
                     app:srcCompat="@drawable/ic_launcher_background" />
 
 
@@ -51,6 +50,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +61,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
+            android:paddingBottom="20dp"
+
             android:layout_height="wrap_content">
 
             <LinearLayout
@@ -73,11 +75,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="Details"
                     android:paddingLeft="10dp"
-                    android:transitionName="petitionTitle"
+                    android:text="Details"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:transitionName="petitionTitle" />
 
                 <View
                     android:layout_width="match_parent"
@@ -85,45 +87,55 @@
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/separator"></View>
 
-                <TextView
-                    android:id="@+id/tvPetitionTitle"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Equal Rights for rich and Poor"
-                    android:visibility="gone"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/profile_image_petitions"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:transitionName="userProfileImage"
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/profile_image_petitions"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/com_facebook_profile_picture_blank_square"
+                        android:transitionName="userProfileImage"
+                        app:civ_border_color="@color/colorAccent"
+                        app:civ_border_width="1dp" />
 
-                    android:src="@drawable/com_facebook_profile_picture_blank_square"
-                    app:civ_border_color="@color/colorAccent"
-                    app:civ_border_width="1dp" />
+                    <TextView
+                        android:id="@+id/tvPetitionAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="-10dp"
+                        android:layout_toEndOf="@+id/profile_image_petitions"
+                        android:padding="10dp"
+                        android:text="by You"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvPetitionDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:transitionName="petitionDescription"
-                    android:layout_marginTop="8dp"
-                    android:text="The Tribe Warriors is an equal human rights awareness project initiated by the great heart that aims to safeguard the cleanliness of our environment" />
+                    android:layout_marginTop="2dp"
+                    android:text="The Tribe Warriors is an equal human rights awareness project initiated by the great heart that aims to safeguard the cleanliness of our environment"
+                    android:transitionName="petitionDescription" />
 
                 <ProgressBar
                     android:id="@+id/progressBarSupportersCount"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:transitionName="petitionProgressBar"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="4dp"
+                    android:transitionName="petitionProgressBar" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -226,256 +238,254 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/separator"></View>
 
-            <Button
-                android:id="@+id/btSignPetition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:transitionName="petitionSignInButton"
-                android:background="@drawable/sign_petition_button_bg"
-                android:text="@string/sign_petition"
-                android:textColor="@color/colorAccent2"
-              />
+                <Button
+                    android:id="@+id/btSignPetition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/sign_petition_button_bg"
+                    android:text="@string/sign_petition"
+                    android:textColor="@color/colorAccent2"
+                    android:transitionName="petitionSignInButton" />
             </LinearLayout>
-
 
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
 
-<!--<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
-&lt;!&ndash;    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <!--<?xml version="1.0" encoding="utf-8"?>
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.activities.PetitionDetails">&ndash;&gt;
+        android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
+    &lt;!&ndash;    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:fitsSystemWindows="false">
+            android:layout_height="match_parent"
+            tools:context=".views.activities.PetitionDetails">&ndash;&gt;
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorAccent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:contentScrim="#2e87e1"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@string/app_name">
+                android:layout_height="300dp"
+                android:fitsSystemWindows="false">
 
-                &lt;!&ndash; You can add views that you want to appear on the
-                     collapsing toolbar here &ndash;&gt;
-                <RelativeLayout
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    app:contentScrim="#2e87e1"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:title="@string/app_name">
 
-                    <ImageView
-                        android:id="@+id/imageView"
+                    &lt;!&ndash; You can add views that you want to appear on the
+                         collapsing toolbar here &ndash;&gt;
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/ic_launcher_background" />
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@drawable/ic_launcher_background" />
 
 
-                </RelativeLayout>
+                    </RelativeLayout>
 
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:minHeight="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:layout_scrollFlags="scroll|snap"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:minHeight="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
+                        app:layout_scrollFlags="scroll|snap"
+                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            </android.support.design.widget.CollapsingToolbarLayout>
+                </android.support.design.widget.CollapsingToolbarLayout>
 
-        </android.support.design.widget.AppBarLayout>-->
+            </android.support.design.widget.AppBarLayout>-->
 
-        <!--<android.support.v4.widget.NestedScrollView
+    <!--<android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar">
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_bar">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Details"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/separator"></View>
+
+            <TextView
+                android:id="@+id/tvPetitionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Equal Rights for rich and Poor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image_petitions"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                app:civ_border_color="@color/colorAccent"
+                app:civ_border_width="1dp" />
+
+            <TextView
+                android:id="@+id/tvPetitionDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="The Tribe Warriors is an equal human rights awareness project initiated by the great heart that aims to safeguard the cleanliness of our environment" />
+
+            <ProgressBar
+                android:id="@+id/progressBarSupportersCount"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/app_bar">
+                android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvNoOfSignatures"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Details"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/separator"></View>
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="0.8"
+                    android:text="14,200 \n of 20,000 Signatures"
+                    android:textStyle="bold|italic" />
 
                 <TextView
-                    android:id="@+id/tvPetitionTitle"
+                    android:id="@+id/tvNoOfTotalShares"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="200 \n total Shares"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/tvNoOfDaysLeft"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="42 Days Left"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/separator"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvSupporters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Equal Rights for rich and Poor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/profile_image_petitions"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/com_facebook_profile_picture_blank_square"
-                    app:civ_border_color="@color/colorAccent"
-                    app:civ_border_width="1dp" />
+                    android:text="Supporters"
+                    android:textStyle="bold|italic" />
 
                 <TextView
-                    android:id="@+id/tvPetitionDesc"
+                    android:id="@+id/tvNoOfSupporters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="The Tribe Warriors is an equal human rights awareness project initiated by the great heart that aims to safeguard the cleanliness of our environment" />
-
-                <ProgressBar
-                    android:id="@+id/progressBarSupportersCount"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvNoOfSignatures"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="0.8"
-                        android:text="14,200 \n of 20,000 Signatures"
-                        android:textStyle="bold|italic" />
-
-                    <TextView
-                        android:id="@+id/tvNoOfTotalShares"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:text="200 \n total Shares"
-                        android:textStyle="bold|italic" />
-
-                    <TextView
-                        android:id="@+id/tvNoOfDaysLeft"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:text="42 Days Left"
-                        android:textStyle="bold|italic" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/separator"></View>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvSupporters"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Supporters"
-                        android:textStyle="bold|italic" />
-
-                    <TextView
-                        android:id="@+id/tvNoOfSupporters"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/oval_background"
-                        android:padding="3dp"
-                        android:text="100"
-                        android:textStyle="bold|italic" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/separator"></View>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvAnnouncements"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Announcements"
-                        android:textStyle="bold|italic" />
-
-                    <TextView
-                        android:id="@+id/tvNoOfAnnouncements"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/oval_background"
-                        android:padding="3dp"
-                        android:text="10"
-                        android:textStyle="bold|italic" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/separator"></View>
+                    android:background="@drawable/oval_background"
+                    android:padding="3dp"
+                    android:text="100"
+                    android:textStyle="bold|italic" />
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/separator"></View>
 
-   <!-- </android.support.constraint.ConstraintLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvAnnouncements"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Announcements"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/tvNoOfAnnouncements"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/oval_background"
+                    android:padding="3dp"
+                    android:text="10"
+                    android:textStyle="bold|italic" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/separator"></View>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>-->
+
+    <!-- </android.support.constraint.ConstraintLayout>-->
 </android.support.design.widget.CoordinatorLayout>

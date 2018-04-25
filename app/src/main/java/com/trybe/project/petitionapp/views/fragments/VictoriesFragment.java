@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +41,7 @@ import java.util.List;
 public class VictoriesFragment extends Fragment {
 
 
-    private Button buttonRefresh;
+    private ImageView imageViewEmptyState;
     private RelativeLayout layourPlaceHolder;
 
     public static final int LIMIT = 7;
@@ -64,7 +65,7 @@ public class VictoriesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_victories, container, false);
         this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
-        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
+        this.imageViewEmptyState = view.findViewById(R.id.imageViewEmptyState);
         victoryModelList = new ArrayList<>();
         petitionsListView = view.findViewById(R.id.myPetitionsRecyclerView);
         victoryRecyclerAdapter = new VictoryRecyclerAdapter(victoryModelList, getActivity());
@@ -192,7 +193,7 @@ public class VictoriesFragment extends Fragment {
             if (victoryModelList.isEmpty()) {
                 petitionsListView.setVisibility(View.GONE);
                 layourPlaceHolder.setVisibility(View.VISIBLE);
-                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                imageViewEmptyState.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //getActivity().recreate();

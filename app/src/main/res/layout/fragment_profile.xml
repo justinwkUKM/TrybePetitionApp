@@ -111,22 +111,24 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0">
 
-            <Button
-                android:id="@+id/buttonRefresh"
+            <ImageView
+                android:id="@+id/imageViewEmptyState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="Refresh" />
+                android:src="@drawable/empty_state"
+                />
 
             <TextView
                 android:id="@+id/textViewPlaceholder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:visibility="invisible"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="94dp"
-                android:text="Please Refresh the page" />
+                android:text="No Victories Yet." />
         </RelativeLayout>
 
 

@@ -2,6 +2,7 @@ package com.trybe.project.petitionapp.views.fragments;
 
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -39,7 +41,6 @@ import java.util.List;
 public class PetitionsFragment extends Fragment {
 
     public static final int LIMIT = 7;
-    private RecyclerView petitionsListView;
     private PetitionRecyclerAdapter petitionRecyclerAdapter;
 
     private List<PetitionModel> petitionModelList;
@@ -49,9 +50,11 @@ public class PetitionsFragment extends Fragment {
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
     private RecyclerView petitionsRecyclerView;
-    private android.widget.Button buttonRefresh;
     private android.widget.TextView textViewPlaceholder;
     private android.widget.RelativeLayout layourPlaceHolder;
+    private android.widget.ProgressBar progressBarMyProfile;
+    private android.support.constraint.ConstraintLayout consLayout;
+    private android.widget.ImageView imageViewEmptyState;
 
     public PetitionsFragment() {
         // Required empty public constructor
@@ -62,18 +65,20 @@ public class PetitionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_petitions, container, false);
+        this.imageViewEmptyState = (ImageView) view.findViewById(R.id.imageViewEmptyState);
+        this.consLayout = (ConstraintLayout) view.findViewById(R.id.consLayout);
+        this.progressBarMyProfile = (ProgressBar) view.findViewById(R.id.progressBarMyProfile);
         this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
         this.textViewPlaceholder = (TextView) view.findViewById(R.id.textViewPlaceholder);
-        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
         this.petitionsRecyclerView = (RecyclerView) view.findViewById(R.id.petitionsRecyclerView);
+
         petitionModelList = new ArrayList<>();
-        petitionsListView = view.findViewById(R.id.petitionsRecyclerView);
         petitionRecyclerAdapter = new PetitionRecyclerAdapter(petitionModelList, getActivity());
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        petitionsListView.setLayoutManager(mLayoutManager);
+        petitionsRecyclerView.setLayoutManager(mLayoutManager);
 
-        petitionsListView.setAdapter(petitionRecyclerAdapter);
+        petitionsRecyclerView.setAdapter(petitionRecyclerAdapter);
 
         /*if (petitionRecyclerAdapter.getItemCount()==0){
             Toast.makeText(getActivity(), "No petitions exist yet", Toast.LENGTH_SHORT).show();
@@ -84,7 +89,7 @@ public class PetitionsFragment extends Fragment {
         if (firebaseAuth.getCurrentUser() != null) {
             firebaseFirestore = FirebaseFirestore.getInstance();
 
-            petitionsListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            petitionsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
@@ -200,9 +205,9 @@ public class PetitionsFragment extends Fragment {
         if (petitionRecyclerAdapter.getItemCount() == 0) {
             //Toast.makeText(getActivity(), "NO Data Found", Toast.LENGTH_SHORT).show();
             if (petitionModelList.isEmpty()) {
-                petitionsListView.setVisibility(View.GONE);
+                petitionsRecyclerView.setVisibility(View.GONE);
                 layourPlaceHolder.setVisibility(View.VISIBLE);
-                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                imageViewEmptyState.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getActivity().recreate();
@@ -211,7 +216,7 @@ public class PetitionsFragment extends Fragment {
                     }
                 });
             } else {
-                petitionsListView.setVisibility(View.VISIBLE);
+                petitionsRecyclerView.setVisibility(View.VISIBLE);
                 layourPlaceHolder.setVisibility(View.GONE);
             }
         }
