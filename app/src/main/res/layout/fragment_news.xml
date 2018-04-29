@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.fragments.NewsFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -17,23 +18,30 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="200dp"
         android:visibility="gone"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-        <Button
-            android:id="@+id/buttonRefresh"
+        <ImageView
+            android:id="@+id/imageViewEmptyState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="Refresh" />
+            android:src="@drawable/empty_state"
+            />
 
         <TextView
             android:id="@+id/textViewPlaceholder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:visibility="invisible"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="94dp"
-            android:text="Please Refresh the page" />
+            android:text="No Victories Yet." />
     </RelativeLayout>
 </FrameLayout>

@@ -62,7 +62,6 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         this.layourPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
         this.textViewPlaceholder = (TextView) view.findViewById(R.id.textViewPlaceholder);
-        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
         this.announcementRecyclerView = (RecyclerView) view.findViewById(R.id.announcementRecyclerView);
         announcementModelList = new ArrayList<>();
         announcementListView = view.findViewById(R.id.announcementRecyclerView);
@@ -142,19 +141,23 @@ public class NewsFragment extends Fragment {
                                     });
 
                                 } else {
+                                    Log.e("Announcement", "Document Type Not Added");;
 
                                 }
                             }
                             isFirstPageFirstLoad = false;
                         } else {
-                            checkForEmptyView();
+                            Log.e("Announcement", "Document is empty");
+
                         }
 
 
                     } else {
-                        checkForEmptyView();
+                        Log.e("Announcement", "QuerySnapshot = null");
+
                     }
 
+                    checkForEmptyView();
 
                 }
 
@@ -227,13 +230,13 @@ public class NewsFragment extends Fragment {
             if (announcementModelList.isEmpty()) {
                 announcementListView.setVisibility(View.GONE);
                 layourPlaceHolder.setVisibility(View.VISIBLE);
-                buttonRefresh.setOnClickListener(new View.OnClickListener() {
+                /*buttonRefresh.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getActivity().recreate();
 
                     }
-                });
+                });*/
             } else {
                 announcementListView.setVisibility(View.VISIBLE);
                 layourPlaceHolder.setVisibility(View.GONE);

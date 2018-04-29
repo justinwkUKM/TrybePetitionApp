@@ -74,7 +74,6 @@ public class ProfileFragment extends Fragment {
     private boolean isFirstPageFirstLoad = true;
     private android.support.constraint.ConstraintLayout consLayout;
     private RecyclerView myPetitionsRecyclerView;
-    private Button buttonRefresh;
     private TextView textViewPlaceHolder;
     private RelativeLayout layoutPlaceHolder;
 
@@ -89,7 +88,6 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         this.textViewPlaceHolder = (TextView) view.findViewById(R.id.textViewPlaceholder);
-        this.buttonRefresh = (Button) view.findViewById(R.id.buttonRefresh);
         this.layoutPlaceHolder = (RelativeLayout) view.findViewById(R.id.layourPlaceHolder);
         this.myPetitionsRecyclerView = (RecyclerView) view.findViewById(R.id.myPetitionsRecyclerView);
         this.consLayout = (ConstraintLayout) view.findViewById(R.id.consLayout);
@@ -212,13 +210,7 @@ public class ProfileFragment extends Fragment {
             if (petitionModelList.isEmpty()) {
                 myPetitionsRecyclerView.setVisibility(View.GONE);
                 layoutPlaceHolder.setVisibility(View.VISIBLE);
-                buttonRefresh.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().recreate();
-                        //Toast.makeText(getActivity(), "NO Data Found On Press", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
             } else {
                 myPetitionsRecyclerView.setVisibility(View.VISIBLE);
                 layoutPlaceHolder.setVisibility(View.GONE);
