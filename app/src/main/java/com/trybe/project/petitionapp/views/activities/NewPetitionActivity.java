@@ -150,7 +150,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
                                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Log.e(TAG, "Success");
+                                        //Log.e(TAG, "Success");
                                         String downloadThumbUri = taskSnapshot.getDownloadUrl().toString();
                                         saveToFirestore(download_uri, downloadThumbUri, user_id, stPetitionTitle, stPetitionDescription, stPetitionTargetSupporters, stPetitionStartDate, stPetitionStopDate, randomName);
                                     }
@@ -158,7 +158,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         //error handling
-                                        Log.e(TAG, e.getMessage());
+                                        //Log.e(TAG, e.getMessage());
                                     }
                                 });
 
@@ -240,7 +240,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
                     finish();
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                     Toast.makeText(NewPetitionActivity.this, "FireStore error " + error, Toast.LENGTH_SHORT).show();
                 }
 
@@ -271,7 +271,7 @@ public class NewPetitionActivity extends AppCompatActivity implements DatePicker
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
-                Log.e(TAG, error.getMessage());
+                //Log.e(TAG, error.getMessage());
 
             }
         }

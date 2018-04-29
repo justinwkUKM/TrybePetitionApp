@@ -164,7 +164,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Log.e(TAG, "Success");
+                                //Log.e(TAG, "Success");
                                 Uri downloadThumbUri = taskSnapshot.getDownloadUrl();
                                 saveToFirestore(downloadThumbUri, user_id, name, email);
                                 setupProgress.setVisibility(View.INVISIBLE);
@@ -177,7 +177,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 //error handling
                                 setupProgress.setVisibility(View.INVISIBLE);
-                                Log.e(TAG, e.getMessage());
+                                //Log.e(TAG, e.getMessage());
                             }
                         });
 
@@ -215,7 +215,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                 }else{
                     isSuccessUpload = false;
                     String error = task.getException().getMessage();
-                    Log.e(TAG,error);
+                    //Log.e(TAG,error);
                     //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
                 }
 
@@ -278,9 +278,9 @@ public class AccountSetupActivity extends AppCompatActivity {
                     imageURI=null;
                     //use glide to download and set the image
                     //profileImage.setImageURI(imageURI);
-                    Log.w("AccountSetupActivity", "Logged in through Social Media");
+                    Log.w("AccountSetupActivity", "//Log.ed in through Social Media");
                 }else{
-                    Log.w("AccountSetupActivity", "Not Logged in through Social Media");
+                    Log.w("AccountSetupActivity", "Not //Log.ed in through Social Media");
                 }
             }
 
@@ -317,7 +317,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                 }else{
 
                     String error = task.getException().getMessage();
-                    Log.e(TAG,error);
+                    //Log.e(TAG,error);
                     //Toast.makeText(AccountSetupActivity.this, "firebaseFirestore error "+error, Toast.LENGTH_SHORT).show();
                 }
                 setupProgress.setVisibility(View.INVISIBLE);

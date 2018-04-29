@@ -35,15 +35,15 @@ import java.util.List;
 /**
  * Created by Waqas Khalid Obeidy on 29/3/2018.
  */
-
-
-
 public class VictoriesFragment extends Fragment {
 
 
     private ImageView imageViewEmptyState;
     private RelativeLayout layourPlaceHolder;
 
+    /**
+     * The constant LIMIT.
+     */
     public static final int LIMIT = 7;
     private RecyclerView petitionsListView;
     private VictoryRecyclerAdapter victoryRecyclerAdapter;
@@ -55,6 +55,9 @@ public class VictoriesFragment extends Fragment {
     private DocumentSnapshot lastVisible;
     private boolean isFirstPageFirstLoad = true;
 
+    /**
+     * Instantiates a new Victories fragment.
+     */
     public VictoriesFragment() {
         // Required empty public constructor
     }
@@ -129,6 +132,8 @@ public class VictoriesFragment extends Fragment {
                                     }
 
                                     victoryRecyclerAdapter.notifyDataSetChanged();
+                                    checkForEmptyView();
+
 
                                 } else {
 
@@ -144,6 +149,7 @@ public class VictoriesFragment extends Fragment {
                     } else {
 
                     }
+                    victoryRecyclerAdapter.notifyDataSetChanged();
                     checkForEmptyView();
                 }
             });
@@ -153,6 +159,15 @@ public class VictoriesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        petitionsListView.setAdapter(victoryRecyclerAdapter);
+    }
+
+    /**
+     * Load more petitions.
+     */
     public void loadMorePetitions() {
         Query nextQuery = firebaseFirestore.collection("Victories")
                 .orderBy("victory_petition_timestamp", Query.Direction.DESCENDING)

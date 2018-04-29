@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.trybe.project.petitionapp.R;
+import com.trybe.project.petitionapp.others.Utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -56,6 +57,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Utils utils =new Utils();
+        utils.checkFirstRun(getApplicationContext());
 
         // Configure Google Sign In
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -181,7 +185,7 @@ public class LoginActivity extends BaseActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Log.e(TAG, "Google sign in failed", e);
+                //Log.e(TAG, "Google sign in failed", e);
                 // ...
             }
         }else{
@@ -242,9 +246,9 @@ public class LoginActivity extends BaseActivity {
                 Log.e(TAG, "printHashKey() Hash Key: " + hashKey);
             }
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "printHashKey()", e);
+            //Log.e(TAG, "printHashKey()", e);
         } catch (Exception e) {
-            Log.e(TAG, "printHashKey()", e);
+            //Log.e(TAG, "printHashKey()", e);
         }
     }
 

@@ -53,19 +53,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvAnnouncementTitle" />
 
-            <ImageButton
-                android:id="@+id/btLikeAnnouncement"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                android:scaleType="centerCrop"
-                android:text="@string/sign_petition"
-                android:textColor="@color/colorAccent2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvAnnouncementDesc"
-                app:srcCompat="@drawable/ic_star_default" />
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/profile_image_Announcement"
@@ -80,16 +67,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <ImageButton
-                android:id="@+id/btReplyAnnouncement"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                app:layout_constraintStart_toEndOf="@+id/btLikeAnnouncement"
-                app:layout_constraintTop_toBottomOf="@+id/tvAnnouncementDesc"
-                app:srcCompat="@drawable/ic_announcement_colorprimary" />
+
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

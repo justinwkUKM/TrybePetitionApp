@@ -129,13 +129,13 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                     } else {
 
                         String error = task.getException().getMessage();
-                        Log.e(TAG, error);
+                        //Log.e(TAG, error);
                         //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-            //Signed petitions support count
+            //Announcement petitions support count
             firebaseFirestore.collection("Petitions/" + stPetitionPostId + "/Announcements").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
@@ -155,9 +155,12 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                             int size = queryDocumentSnapshots.size();
 
                             announcementSize = size;
-
                         }
+                    }else {
+
                     }
+
+
 
                 }
             });
@@ -180,6 +183,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                 saveToFirestore(Uri.parse(image_url), thumb_url, user_id, stPetitionTitle, stPetitionDesc, stPetitionSupporters, stPetitionPostId, start_date, end_date);
                             }else {
                                 delFromFirebase(stPetitionPostId,"Victories");
+
                             }
                             holder.supportersProgressBar.setProgress(size);
                             holder.tvPetitionSupporters.setText(size + " of " + totalSupporters + " supporters have Signed this petition");
@@ -217,7 +221,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
                     } else {
                         String error = task.getException().getMessage();
-                        Log.e(TAG, error);
+                        //Log.e(TAG, error);
                     }
                 }
             });
@@ -250,7 +254,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                                 holder.btSignPetition.setText("Signed!");
                                             } else {
                                                 String error = task.getException().getMessage();
-                                                Log.e(TAG, error);
+                                                //Log.e(TAG, error);
                                             }
                                         }
                                     });
@@ -266,7 +270,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
 
                             } else {
                                 String error = task.getException().getMessage();
-                                Log.e(TAG, error);
+                                //Log.e(TAG, error);
                             }
 
                             //
@@ -381,9 +385,9 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
-                        Log.e(TAG, "exists");
+                        //Log.e(TAG, "exists");
                     } else {
-                        Log.e(TAG, "x exists");
+                        //Log.e(TAG, "x exists");
                         firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
                                 addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -392,7 +396,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                                             Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
                                         } else {
                                             String error = task.getException().getMessage();
-                                            Log.e(TAG, error);
+                                            //Log.e(TAG, error);
                                             Toast.makeText(mContext, "v_victory_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -400,7 +404,7 @@ public class PetitionRecyclerAdapter extends RecyclerView.Adapter<PetitionRecycl
                     }
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                 }
             }
         });

@@ -204,6 +204,11 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        petitionRecyclerAdapter.notifyDataSetChanged();
+    }
     private void checkForEmptyView() {
         if (petitionRecyclerAdapter.getItemCount() == 0) {
             //Toast.makeText(getActivity(), "NO Data Found", Toast.LENGTH_SHORT).show();
@@ -280,7 +285,7 @@ public class ProfileFragment extends Fragment {
                 } else {
 
                     String error = task.getException().getMessage();
-                    Log.e("Error", error);
+                    //Log.e("Error", error);
                     //Toast.makeText(AccountSetupActivity.this, "firebaseFirestore error "+error, Toast.LENGTH_SHORT).show();
                 }
                 progressBarMyProfile.setVisibility(View.GONE);
@@ -330,7 +335,7 @@ if (doc.getDocument().getString("petition_author").equals(user_id)) {
                 } else {
 
                     String error = task.getException().getMessage();
-                    Log.e("Error", error);
+                    //Log.e("Error", error);
                     //Toast.makeText(AccountSetupActivity.this, "firebaseFirestore error "+error, Toast.LENGTH_SHORT).show();
                 }
                 progressBarMyProfile.setVisibility(View.GONE);

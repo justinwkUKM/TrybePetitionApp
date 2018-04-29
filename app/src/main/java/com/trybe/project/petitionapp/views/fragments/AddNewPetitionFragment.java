@@ -155,7 +155,7 @@ public class AddNewPetitionFragment extends Fragment implements DatePickerDialog
                                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Log.e("", "Success");
+                                        //Log.e("", "Success");
                                         String downloadThumbUri = taskSnapshot.getDownloadUrl().toString();
                                         saveToFirestore(download_uri, downloadThumbUri, user_id, stPetitionTitle, stPetitionDescription, stPetitionTargetSupporters, stPetitionStartDate, stPetitionStopDate, randomName);
                                     }
@@ -163,7 +163,7 @@ public class AddNewPetitionFragment extends Fragment implements DatePickerDialog
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         //error handling
-                                        Log.e("", e.getMessage());
+                                        //Log.e("", e.getMessage());
                                     }
                                 });
 
@@ -240,7 +240,7 @@ public class AddNewPetitionFragment extends Fragment implements DatePickerDialog
                     getActivity().finish();
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e("", error);
+                    //Log.e("", error);
                     Toast.makeText(getActivity(), "FireStore error " + error, Toast.LENGTH_SHORT).show();
                 }
 
@@ -268,7 +268,7 @@ public class AddNewPetitionFragment extends Fragment implements DatePickerDialog
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
-                Log.e("", error.getMessage());
+                //Log.e("", error.getMessage());
 
             }
         }

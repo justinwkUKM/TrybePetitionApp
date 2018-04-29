@@ -45,6 +45,11 @@ import id.zelory.compressor.Compressor;
  */
 public class NewAnnouncementActivity extends AppCompatActivity {
 
+    /**
+     * The constant TAG.
+     */
+
+
     public static final String TAG = NewAnnouncementActivity.class.getSimpleName();
     private Toolbar newAnnouncementToolbar;
     private android.widget.ImageView imageViewAnnouncementCover;
@@ -57,6 +62,9 @@ public class NewAnnouncementActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String user_id;
+    /**
+     * The Random name.
+     */
     String randomName;
     private Bitmap compressedImageFile;
     private String postId;
@@ -132,7 +140,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Log.e(TAG, "Success");
+                                        //Log.e(TAG, "Success");
                                         String downloadThumbUri = taskSnapshot.getDownloadUrl().toString();
                                         saveToFirestore(postId,download_uri,downloadThumbUri, user_id, stAnnouncementTitle, stAnnouncementDescription, randomName);
                                     }
@@ -140,7 +148,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         //error handling
-                                        Log.e(TAG, e.getMessage());
+                                        //Log.e(TAG, e.getMessage());
                                     }
                                 });
 
@@ -150,7 +158,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                             } else {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 String error = task.getException().getMessage();
-                                Log.e(TAG, error);
+                                //Log.e(TAG, error);
 
                                 //enable the add petition button
                                 btAddAnnouncement.setEnabled(true);
@@ -169,6 +177,16 @@ public class NewAnnouncementActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * @param postId
+     * @param download_uri
+     * @param downloadThumbUri
+     * @param user_id
+     * @param stPetitionTitle
+     * @param stPetitionDescription
+     * @param randomName
+     */
     private void saveToFirestore(String postId, Uri download_uri, String downloadThumbUri, String user_id, String stPetitionTitle,
                                  String stPetitionDescription, String randomName) {
         Map<String, Object> petitionAnnouncementMap = new HashMap<>();
@@ -190,7 +208,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
                     finish();
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                     Toast.makeText(NewAnnouncementActivity.this, "FireStore error " + error, Toast.LENGTH_SHORT).show();
                 }
 
@@ -221,7 +239,7 @@ public class NewAnnouncementActivity extends AppCompatActivity {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
-                Log.e(TAG, error.getMessage());
+                //Log.e(TAG, error.getMessage());
 
             }
         }

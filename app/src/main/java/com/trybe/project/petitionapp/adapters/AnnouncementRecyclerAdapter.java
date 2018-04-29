@@ -47,7 +47,6 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcement_list_item, parent, false);
-        //this.mContext = parent.getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         return new ViewHolder(view);
@@ -89,115 +88,15 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
                         } else {
 
                             String error = task.getException().getMessage();
-                            Log.e(TAG, error);
+                            //Log.e(TAG, error);
                             //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        Log.e(TAG, "Document Doesn't Exist");
+                        //Log.e(TAG, "Document Doesn't Exist");
                     }
 
                 }
             });
-
-            /*//Signed petitions support count
-            firebaseFirestore.collection("Petitions/" + stAnnouncementPostId + "/Announcements").addSnapshotListener((Activity) mContext, new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                    if (queryDocumentSnapshots != null) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-
-
-                        } else {
-                            //Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                }
-            });
-
-            //Signed Announcement Feature
-
-            firebaseFirestore.collection("Petitions/" + stAnnouncementPostId + "/Announcements").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().exists()) {
-
-
-                        } else {
-
-                        }
-
-                    } else {
-                        String error = task.getException().getMessage();
-                        Log.e(TAG, error);
-                    }
-                }
-            });
-
-
-            holder.btLikeAnnouncement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-                    firebaseFirestore.collection("Petitions/" + stAnnouncementPostId + "/Announcements").document(stCurrentUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                if (!task.getResult().exists()) {
-
-                                    Map<String, Object> signatureMap = new HashMap<>();
-                                    signatureMap.put("timestamp", FieldValue.serverTimestamp());
-                                    signatureMap.put("user_name", firebaseAuth.getCurrentUser().getDisplayName());
-                                    firebaseFirestore.collection("Petitions/" + stAnnouncementPostId + "/Announcements").document(stCurrentUserId).set(signatureMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-
-                                                //holder.btLikeAnnouncement.setEnabled(false);
-                                                holder.btLikeAnnouncement.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
-                                                *//*holder.btLikeAnnouncement.setTextColor(mContext.getResources().getColor(android.R.color.white));
-                                                holder.btLikeAnnouncement.setText("Signed!");*//*
-                                            } else {
-                                                String error = task.getException().getMessage();
-                                                Log.e(TAG, error);
-                                            }
-                                        }
-                                    });
-
-                                } else {
-                                    firebaseFirestore.collection("Petitions/" + stAnnouncementPostId + "/Announcements").document(stCurrentUserId).delete();
-                                    holder.btLikeAnnouncement.setBackground(mContext.getResources().getDrawable(R.drawable.sign_petition_button_bg));
-                                    *//*holder.btLikeAnnouncement.setTextColor(mContext.getResources().getColor(R.color.colorAccent2));
-                                    holder.btLikeAnnouncement.setText("Unsigned!");*//*
-                                    //  Toast.makeText(mContext, "Data Doesnt Exist", Toast.LENGTH_SHORT).show();
-                                }
-
-                            } else {
-                                String error = task.getException().getMessage();
-                                Log.e(TAG, error);
-                            }
-                        }
-                    });
-
-                }
-            });
-
-            holder.btReplyAnnouncement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (user_id.isEmpty()||user_id == null){
-                        Log.w(TAG, user_id);
-                    }else {
-                        Intent i = new Intent(mContext, NewAnnouncementActivity.class);
-                        Log.w(TAG, user_id);
-                        i.putExtra("stAnnouncementPostId", user_id);
-                        mContext.startActivity(i);
-                    }
-
-                }
-            });*/
         }
 
 
@@ -213,9 +112,7 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvAnnouncementTitle, tvAnnouncementDesc;
         public ImageView AnnouncementCoverImageView;
-        public ImageButton btLikeAnnouncement;
         public CircleImageView profileImage;
-        private ImageButton btReplyAnnouncement;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -223,9 +120,7 @@ public class AnnouncementRecyclerAdapter extends RecyclerView.Adapter<Announceme
             tvAnnouncementTitle = itemView.findViewById(R.id.tvAnnouncementTitle);
             tvAnnouncementDesc = itemView.findViewById(R.id.tvAnnouncementDesc);
             AnnouncementCoverImageView = itemView.findViewById(R.id.imageViewAnnouncementCover);
-            btLikeAnnouncement = itemView.findViewById(R.id.btLikeAnnouncement);
             profileImage = itemView.findViewById(R.id.profile_image_Announcement);
-            btReplyAnnouncement = itemView.findViewById(R.id.btReplyAnnouncement);
         }
     }
 }

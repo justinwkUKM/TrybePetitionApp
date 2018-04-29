@@ -139,7 +139,7 @@ public class PetitionDetails extends BaseActivity {
                     Glide.with(getApplicationContext()).setDefaultRequestOptions(placeHolderRequest).load(user_profile).into(profileimagepetitions);
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                     //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -250,7 +250,7 @@ public class PetitionDetails extends BaseActivity {
 
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                 }
             }
         });
@@ -281,7 +281,7 @@ public class PetitionDetails extends BaseActivity {
                                             btSignPetition.setText("Signed!");
                                         } else {
                                             String error = task.getException().getMessage();
-                                            Log.e(TAG, error);
+                                            //Log.e(TAG, error);
                                         }
                                     }
                                 });
@@ -297,7 +297,7 @@ public class PetitionDetails extends BaseActivity {
 
                         } else {
                             String error = task.getException().getMessage();
-                            Log.e(TAG, error);
+                            //Log.e(TAG, error);
                         }
 
                         //
@@ -334,9 +334,9 @@ public class PetitionDetails extends BaseActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
-                        Log.e(TAG, "exists");
+                        //Log.e(TAG, "exists");
                     } else {
-                        Log.e(TAG, "x exists");
+                        //Log.e(TAG, "x exists");
                         firebaseFirestore.collection("Victories").document(stPetitionPostId).set(petitionMap).
                                 addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -345,7 +345,7 @@ public class PetitionDetails extends BaseActivity {
                                             Toast.makeText(PetitionDetails.this, "v_Petition Added", Toast.LENGTH_SHORT).show();
                                         } else {
                                             String error = task.getException().getMessage();
-                                            Log.e(TAG, error);
+                                            //Log.e(TAG, error);
                                             Toast.makeText(PetitionDetails.this, "v_victory_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -353,7 +353,7 @@ public class PetitionDetails extends BaseActivity {
                     }
                 } else {
                     String error = task.getException().getMessage();
-                    Log.e(TAG, error);
+                    //Log.e(TAG, error);
                 }
             }
         });

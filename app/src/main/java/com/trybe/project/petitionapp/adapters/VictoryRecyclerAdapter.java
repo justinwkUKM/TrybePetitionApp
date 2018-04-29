@@ -124,7 +124,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
                     } else {
 
                         String error = task.getException().getMessage();
-                        Log.e(TAG, error);
+                        //Log.e(TAG, error);
                         //Toast.makeText(AccountSetupActivity.this, "FireStore error "+error, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -177,7 +177,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
 
                     } else {
                         String error = task.getException().getMessage();
-                        Log.e(TAG, error);
+                        //Log.e(TAG, error);
                     }
                 }
             });
@@ -211,7 +211,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
                                                 holder.btSignPetition.setText("Signed!");
                                             } else {
                                                 String error = task.getException().getMessage();
-                                                Log.e(TAG, error);
+                                                //Log.e(TAG, error);
                                             }
                                         }
                                     });
@@ -226,7 +226,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
 
                             } else {
                                 String error = task.getException().getMessage();
-                                Log.e(TAG, error);
+                                //Log.e(TAG, error);
                             }
                         }
                     });
@@ -302,7 +302,7 @@ public class VictoryRecyclerAdapter extends RecyclerView.Adapter<VictoryRecycler
                             Toast.makeText(mContext, "v_Petition Added", Toast.LENGTH_SHORT).show();
                         } else {
                             String error = task.getException().getMessage();
-                            Log.e(TAG, error);
+                            //Log.e(TAG, error);
                             Toast.makeText(mContext, "v_petition_FireStore error " + error, Toast.LENGTH_SHORT).show();
                         }
                     }

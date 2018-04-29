@@ -127,12 +127,12 @@ public class PetitionsFragment extends Fragment {
 
                                                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
                                                         String announcementPostId = doc.getDocument().getId();
-                                                        Log.e("Announcement ID", announcementPostId);
+                                                        //Log.e("Announcement ID", announcementPostId);
 
 
                                                     }
                                                 } else {
-                                                    Log.e("Announcement", "Not Exist");;
+                                                    //Log.e("Announcement", "Not Exist");;
                                                 }
                                             }
 
@@ -165,6 +165,12 @@ public class PetitionsFragment extends Fragment {
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        petitionRecyclerAdapter.notifyDataSetChanged();
     }
 
     public void loadMorePetitions() {
