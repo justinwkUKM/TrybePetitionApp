@@ -4,6 +4,8 @@
 or
 “An ancient Roman military unit, comprising six centuries, equal to one tenth of a legion.”
 
+![alt tag](https://github.com/justinwkUKM/TrybePetitionApp/blob/master/ScreenShots/splash.png "Description: Android Splash")
+
 ## Project Scope
 Cohort is a platform for people and organisations to create and share petitions with audiences around the globe and promote social awareness. The aim is to connect people across geographic and cultural borders to support causes they care about.
 
@@ -24,7 +26,7 @@ Facebook SDK
 Setup Image Cropping and Circle Image libraries
 
 ```
-Examples Dependencies
+Example Dependencies
 
 //Google
 implementation 'com.google.android.gms:play-services-auth:12.0.0'
