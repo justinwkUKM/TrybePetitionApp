@@ -60,7 +60,7 @@ See also the list of [contributors](justinwkUKM/TrybePetitionApp/graphs/contribu
 This project is licensed under Trybe Tech. Contact dhista@trybe.tech for more details
 
 ## Acknowledgments
-###Inspired by
+### Inspired by
 * CHANGE.org
 * TVAC STUDIO
 
