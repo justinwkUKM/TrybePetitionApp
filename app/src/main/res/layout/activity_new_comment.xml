@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="New Announcement"
+                android:text="@string/toolbar_title_new_announcement"
                 android:textColor="@color/White"
                 android:textSize="24sp"
                 android:textStyle="bold" />

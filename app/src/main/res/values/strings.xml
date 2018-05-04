@@ -57,6 +57,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_petition">Sign this petition</string>
     <string name="image_description">Image Description</string>
+    <string name="toolbar_title_account_setup">Account Setup</string>
+    <string name="toolbar_title_cohort">Cohort</string>
+    <string name="toolbar_title_new_announcement">New Announcement</string>
+    <string name="toolbar_title_new_petition">New Petition</string>
 
     <!--Debug SHA1: DC:15:07:D6:37:E9:D3:CE:C2:C8:7C:A8:AD:12:65:A9:61:B0:A0:BE-->
 
